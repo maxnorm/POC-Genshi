@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.28;
+
+/// @title IERC998ERC20TopDown
+/// @author Nick Mudge <nick@perfectabstractions.com>, https://github.com/mattlockyer/composables-998.
+/// @notice Interface for the ERC998ERC20TopDown contract.
+/// @dev This interface is used to interact with the ERC998ERC20TopDown contract.
+interface IERC998ERC20TopDown {
+    event ReceivedERC20(address indexed _from, uint256 indexed _tokenId, address indexed _erc20Contract, uint256 _value);
+    event TransferERC20(uint256 indexed _tokenId, address indexed _to, address indexed _erc20Contract, uint256 _value);
+
+    function tokenFallback(address _from, uint256 _value, bytes calldata _data) external;
+    function balanceOfERC20(uint256 _tokenId, address __erc20Contract) external view returns (uint256);
+    function transferERC20(uint256 _tokenId, address _to, address _erc20Contract, uint256 _value) external;
+    function getERC20(address _from, uint256 _tokenId, address _erc20Contract, uint256 _value) external;
+}
