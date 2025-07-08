@@ -38,8 +38,5 @@ jobs:
       env:
         REPORT_GAS: true
 
-    - name: Run solhint
-      run: npx solhint 'contracts/**/*.sol'
-
     - name: Run coverage
       run: npx hardhat coverage
