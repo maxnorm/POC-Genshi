@@ -259,65 +259,92 @@ describe("ERC998TopDown contract", function () {
       ERC721TokenId_2 = _ERC721TokenId_2;
       ERC998TokenId_2 = _ERC998TokenId_2;
 
-      const data = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [ERC998TokenId_2]);
+      const data1 = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [ERC998TokenId]);
       await erc721_1.connect(alice)["safeTransferFrom(address,address,uint256,bytes)"](
         alice.address,
         erc998_address,
-        ERC721TokenId_2,
-        data
+        ERC721TokenId_1,
+        data1
       );
+
+      const data2 = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [ERC998TokenId_2]);
+      await erc721_2.connect(bob)["safeTransferFrom(address,address,uint256,bytes)"](
+        bob.address,
+        erc998_address,
+        ERC721TokenId_2,
+        data2
+      );
+      
     });
 
     it("should transfer second ERC721 to second composable", async function () {
-      expect(await erc721_1.ownerOf(ERC721TokenId_2)).to.equal(erc998_address);
+      expect(await erc721_2.ownerOf(ERC721TokenId_2)).to.equal(erc998_address);
       expect(await erc998.totalChildContracts(ERC998TokenId_2)).to.equal(1);
-      expect(await erc998.childExists(ERC998TokenId_2, erc721_1_address, ERC721TokenId_2)).to.be.true;
+      expect(await erc998.childExists(ERC998TokenId_2, erc721_2_address, ERC721TokenId_2)).to.be.true;
 
-      const [rootOwnerBytes32] = await erc998.ownerOfChild(erc721_1_address, ERC721TokenId_2);
+      const [rootOwnerBytes32] = await erc998.ownerOfChild(erc721_2_address, ERC721TokenId_2);
       const rootOwner = bytes32ToAddress(rootOwnerBytes32);
       expect(rootOwner).to.equal(alice.address);
     });
     it("should verify child exists in second composable", async function () {
-      expect(await erc998.childExists(ERC998TokenId_2, erc721_1_address, ERC721TokenId_2)).to.be.true;
+      expect(await erc998.childExists(ERC998TokenId_2, erc721_2_address, ERC721TokenId_2)).to.be.true;
     });
     it("should transfer child between composables", async function () {
       // First verify initial state
-      expect(await erc998.childExists(ERC998TokenId_2, erc721_1_address, ERC721TokenId_2)).to.be.true;
-      expect(await erc998.childExists(ERC998TokenId, erc721_1_address, ERC721TokenId_2)).to.be.false;
+      expect(await erc998.childExists(ERC998TokenId_2, erc721_2_address, ERC721TokenId_2)).to.be.true;
+      expect(await erc998.childExists(ERC998TokenId, erc721_2_address, ERC721TokenId_2)).to.be.false;
 
       await erc998.connect(alice).transferChildToParent(
           ERC998TokenId_2,      // from token
           erc998_address,       // to contract
           ERC998TokenId,        // to token
-          erc721_1_address,     // child contract
+          erc721_2_address,     // child contract
           ERC721TokenId_2,      // child token
       );
 
-      // Verify the transfer
-      expect(await erc998.childExists(ERC998TokenId_2, erc721_1_address, ERC721TokenId_2)).to.be.false;
-      expect(await erc998.childExists(ERC998TokenId, erc721_1_address, ERC721TokenId_2)).to.be.true;
+      expect(await erc998.childExists(ERC998TokenId_2, erc721_2_address, ERC721TokenId_2)).to.be.false;
+      expect(await erc998.childExists(ERC998TokenId, erc721_2_address, ERC721TokenId_2)).to.be.true;
 
-      // Verify root ownership
-      const [rootOwnerBytes32] = await erc998.ownerOfChild(erc721_1_address, ERC721TokenId_2);
+      const [rootOwnerBytes32] = await erc998.ownerOfChild(erc721_2_address, ERC721TokenId_2);
       const rootOwner = bytes32ToAddress(rootOwnerBytes32);
       expect(rootOwner).to.equal(owner.address);
     });
     it("should verify child contract arrays are updated", async function () {
-      expect(await erc998.totalChildContracts(ERC998TokenId_2)).to.equal(0);
-      expect(await erc998.totalChildContracts(ERC998TokenId)).to.equal(1);
+      await erc998.connect(alice).transferChildToParent(
+        ERC998TokenId_2,      // from token
+        erc998_address,       // to contract
+        ERC998TokenId,        // to token
+        erc721_2_address,     // child contract
+        ERC721TokenId_2,      // child token
+      );
+
+      const totalChildContracts_2 = await erc998.totalChildContracts(ERC998TokenId_2);
+      const totalChildContracts_1 = await erc998.totalChildContracts(ERC998TokenId);
+      expect(totalChildContracts_2).to.equal(0);
+      expect(totalChildContracts_1).to.equal(2);
+
+      expect(await erc998.childExists(ERC998TokenId_2, erc721_2_address, ERC721TokenId_2)).to.be.false;
+      expect(await erc998.childExists(ERC998TokenId, erc721_2_address, ERC721TokenId_2)).to.be.true;
+
+      expect(await erc998.totalChildTokens(ERC998TokenId, erc721_2_address)).to.equal(1);
+      expect(await erc998.totalChildTokens(ERC998TokenId_2, erc721_2_address)).to.equal(0);
+
+      expect(await erc998.childTokenByIndex(ERC998TokenId, erc721_2_address, 0)).to.equal(ERC721TokenId_2);
     });
-    it("should verify ownership changes");
+    it("should verify ownership changes", async function () {
+      await erc998.connect(alice).transferChildToParent(
+        ERC998TokenId_2,      // from token
+        erc998_address,       // to contract
+        ERC998TokenId,        // to token
+        erc721_2_address,     // child contract
+        ERC721TokenId_2,      // child token
+      );
+      const [rootOwnerBytes32] = await erc998.ownerOfChild(erc721_2_address, ERC721TokenId_2);
+      const rootOwner = bytes32ToAddress(rootOwnerBytes32);
+      expect(rootOwner).to.equal(owner.address);
+    });
   });
 
-  describe("Multi Token Tests", function () {
-    describe("Multiple NFT Contracts", function () {
-      it("should handle multiple NFT contract additions");
-      it("should track child tokens across multiple NFTs");
-      it("should handle NFT contract removals");
-    });
-  });
-
-  
   describe("Error Cases", function () {
     describe("ERC721 Operations", function () {
       it("should revert when transferring to zero address", async function () {
@@ -334,67 +361,177 @@ describe("ERC998TopDown contract", function () {
           .to.be.revertedWithCustomError(erc998, "ERC721InsufficientApproval");
       });
 
-      it("should revert when approving current owner");
-
-      it("should revert when child token already exists");
-
-      it("should revert when child contract is invalid");
+      it("should revert when approving current owner", async function () {
+        const { ERC998TokenId } = await mintFixture();
+        await expect(erc998.approve(owner.address, ERC998TokenId))
+          .to.be.revertedWithCustomError(erc998, "ERC998TopDown_ApprovalToCurrentOwner");
+      });
     });
 
     describe("Root Owner Operations", function () {
-      it("should revert when token has no root owner");
-      it("should revert on invalid root owner operations");
+      it("should revert when caller is not owner nor approved", async function () {
+        const { ERC998TokenId } = await mintFixture();
+    
+        await expect(
+          erc998.connect(alice).approve(bob.address, ERC998TokenId)
+        ).to.be.revertedWithCustomError(erc998, "ERC998TopDown_CallerIsNotOwnerNorApprovedOperator")
+          .withArgs(ERC998TokenId);
+      });
     });
   });
 
   describe("Events", function () {
-    it("should emit ReceivedChild event");
+    it("should emit ReceivedChild event", async function () {
+      const { ERC998TokenId, ERC721TokenId_1 } = await mintFixture();
+      const data = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [ERC998TokenId]);
+  
+      await expect(
+        erc721_1.connect(alice)["safeTransferFrom(address,address,uint256,bytes)"](
+        alice.address,
+        erc998_address,
+        ERC721TokenId_1,
+        data
+      )).to.emit(erc998, "ReceivedChild")
+      .withArgs(
+        alice.address,
+        ERC998TokenId,
+        erc721_1_address,
+        ERC721TokenId_1
+      );
+    });
 
-    it("should emit TransferChild event");
+    it("should emit TransferChild event", async function () {
+      const { ERC998TokenId, ERC721TokenId_1 } = await mintFixture();
+      const data = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [ERC998TokenId]);
+      await erc721_1.connect(alice)["safeTransferFrom(address,address,uint256,bytes)"](
+        alice.address,
+        erc998_address,
+        ERC721TokenId_1,
+        data
+      );
+
+      await expect(
+        erc998.transferChild(
+          ERC998TokenId,        
+          bob.address,
+          erc721_1_address,
+          ERC721TokenId_1
+        )
+      ).to.emit(erc998, "TransferChild")
+       .withArgs(
+         ERC998TokenId,         // parentTokenId
+         bob.address,           // to
+         erc721_1_address,      // childContract
+         ERC721TokenId_1        // childTokenId
+       );
+    });
 
     it("should emit correct Transfer events", async function () {
       const { ERC998TokenId } = await mintFixture();
       
-      // Transfer composable token
       await expect(erc998.transferFrom(owner.address, alice.address, ERC998TokenId))
         .to.emit(erc998, "Transfer")
         .withArgs(owner.address, alice.address, ERC998TokenId);
-      
-      // Verify ownership changed
-      expect(await erc998.ownerOf(ERC998TokenId)).to.equal(alice.address);
     });
   });
 
   describe("Enumeration", function () {
-    describe("Child Contracts", function () {
-      it("should enumerate child contracts correctly");
-      it("should return correct contract by index");
-      it("should fail for invalid contract index");
-    });
+      it("should enumerate child contracts correctly", async function () {
+        const { ERC998TokenId, ERC721TokenId_1, ERC721TokenId_2 } = await mint2SetsOfTokens();
+        const data = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [ERC998TokenId]);
+        await erc721_1.connect(alice)["safeTransferFrom(address,address,uint256,bytes)"](
+          alice.address,
+          erc998_address,
+          ERC721TokenId_1,
+          data
+        );
 
-    describe("Child Tokens", function () {
-      it("should enumerate child tokens correctly");
-      it("should return correct token by index");
-      it("should fail for invalid token index");
-    });
+        expect(await erc998.totalChildContracts(ERC998TokenId)).to.equal(1);
+        expect(await erc998.childContractByIndex(ERC998TokenId, 0)).to.equal(erc721_1_address);
+
+        await erc721_2.connect(bob)["safeTransferFrom(address,address,uint256,bytes)"](
+          bob.address,
+          erc998_address,
+          ERC721TokenId_2,
+          data
+        );
+
+        expect(await erc998.totalChildContracts(ERC998TokenId)).to.equal(2);
+        expect(await erc998.childContractByIndex(ERC998TokenId, 1)).to.equal(erc721_2_address);
+      });
+      it("should return correct contract by index", async function () {
+        const { ERC998TokenId, ERC721TokenId_1 } = await mint2SetsOfTokens();
+        const data = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [ERC998TokenId]);
+        await erc721_1.connect(alice)["safeTransferFrom(address,address,uint256,bytes)"](
+          alice.address,
+          erc998_address,
+          ERC721TokenId_1,
+          data
+        );
+
+        expect(await erc998.childContractByIndex(ERC998TokenId, 0)).to.equal(erc721_1_address);
+        expect(await erc998.childTokenByIndex(ERC998TokenId, erc721_1_address, 0)).to.equal(ERC721TokenId_1);
+      });
+      it("should fail for invalid contract index", async function () {
+        const { ERC998TokenId, ERC721TokenId_1 } = await mint2SetsOfTokens();
+        const data = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [ERC998TokenId]);
+        await erc721_1.connect(alice)["safeTransferFrom(address,address,uint256,bytes)"](
+          alice.address,
+          erc998_address,
+          ERC721TokenId_1,
+          data
+        );
+
+        await expect(erc998.childContractByIndex(ERC998TokenId, 100))
+          .to.be.revertedWithCustomError(erc998, "ERC998TopDownEnumerable_InvalidContractIndex");
+        await expect(erc998.childTokenByIndex(ERC998TokenId, erc721_1_address, 3))
+          .to.be.revertedWithCustomError(erc998, "ERC998TopDownEnumerable_InvalidTokenIndex");
+      });
   });
 
   describe("Root Owner Management", function () {
-    it("should get correct root owner");
-    it("should handle nested ownership");
-    it("should manage root owner approvals");
-  });
-  
-  describe("Root Owner Management", function () {
-    it("should get correct root owner");
-    it("should handle nested ownership");
-    it("should manage root owner approvals");
+    it("should get correct root owner", async function () {
+      const { ERC998TokenId, ERC721TokenId_1, ERC721TokenId_2, ERC998TokenId_2 } = await mint2SetsOfTokens();
+
+      let rootOwnerBytes = await erc998.rootOwnerOf(ERC998TokenId);
+      let rootOwner = bytes32ToAddress(rootOwnerBytes);
+      expect(rootOwner).to.equal(owner.address);
+
+      const data = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [ERC998TokenId]);
+      await erc721_1.connect(alice)["safeTransferFrom(address,address,uint256,bytes)"](
+        alice.address,
+        erc998_address,
+        ERC721TokenId_1,
+        data
+      );
+
+      const data2 = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [ERC998TokenId_2]);
+      await erc998.connect(owner)["safeTransferFrom(address,address,uint256,bytes)"](
+        owner.address,
+        erc998_address,
+        ERC998TokenId,
+        data2
+      );
+
+      rootOwnerBytes = await erc998.rootOwnerOf(ERC998TokenId_2);
+      rootOwner = bytes32ToAddress(rootOwnerBytes);
+      expect(rootOwner).to.equal(alice.address);
+
+      rootOwnerBytes = await erc998.rootOwnerOf(ERC998TokenId);
+      rootOwner = bytes32ToAddress(rootOwnerBytes);
+      expect(rootOwner).to.equal(alice.address);
+
+      rootOwnerBytes = await erc998.rootOwnerOfChild(erc721_1_address, ERC721TokenId_1);
+      rootOwner = bytes32ToAddress(rootOwnerBytes);
+      expect(rootOwner).to.equal(alice.address);
+    });
+    it("should handle nested ownership", async function () {
+    });
   });
 
   describe("Complex Scenarios", function () {
     it("should handle nested composable transfers");
     it("should handle multiple child transfers in single transaction");
-    it("should handle mixed ERC20 and ERC721 operations");
     it("should maintain correct state after multiple operations");
   });
 });

@@ -138,11 +138,11 @@ abstract contract ERC998TopDown is
     /// @param childTokenId The child token ID
     /// @return bytes32 The root owner encoded as bytes32
     function rootOwnerOfChild(
-        address childContract,
-        uint256 childTokenId
+      address childContract,
+      uint256 childTokenId
     ) public view returns (bytes32) {
-        address currentOwner;
-        uint256 currentTokenId = childTokenId;
+      address currentOwner;
+      uint256 currentTokenId = childTokenId;
 
         // Determine initial owner based on whether we're querying a direct token or child token
         if (childContract != address(0)) {
@@ -325,15 +325,18 @@ abstract contract ERC998TopDown is
     _requireOwned(tokenId);
 
     require(
-        _tokenData[tokenId].erc721ChildTokenIndex[childContract][childTokenId] == 0, 
-        ERC998TopDown_ChildTokenAlreadyExists(tokenId, childContract, childTokenId)
+      _childTokenOwner[childContract][childTokenId] == 0,
+      ERC998TopDown_ChildTokenAlreadyExists(tokenId, childContract, childTokenId)
     );
-    
-    if (_tokenData[tokenId].erc721childContractIndex[childContract] == 0 && 
-        _tokenData[tokenId].erc721Contracts.length == 0) 
-    {
-        _tokenData[tokenId].erc721childContractIndex[childContract] = 1; // Use 1-based indexing
-        _tokenData[tokenId].erc721Contracts.push(childContract);
+
+    require(
+      _tokenData[tokenId].erc721ChildTokenIndex[childContract][childTokenId] == 0, 
+      ERC998TopDown_ChildTokenAlreadyExists(tokenId, childContract, childTokenId)
+    );
+
+    if (_tokenData[tokenId].erc721childContractIndex[childContract] == 0) {
+      _tokenData[tokenId].erc721childContractIndex[childContract] = _tokenData[tokenId].erc721Contracts.length + 1; // Use 1-based indexing
+      _tokenData[tokenId].erc721Contracts.push(childContract);
     }
 
     _tokenData[tokenId].erc721ChildTokenIds[childContract].push(childTokenId);
@@ -341,7 +344,7 @@ abstract contract ERC998TopDown is
     _childTokenOwner[childContract][childTokenId] = tokenId;
 
     emit ReceivedChild(from, tokenId, childContract, childTokenId);
-  }
+}
 
   /// @notice Remove a child token from a parent token
   /// @param tokenId The token ID of the parent token
@@ -367,7 +370,7 @@ abstract contract ERC998TopDown is
     delete tokenData.erc721ChildTokenIndex[childContract][childTokenId];
     delete _childTokenOwner[childContract][childTokenId];
 
-    if (lastTokenIndex == 0) {
+    if (tokenData.erc721ChildTokenIds[childContract].length == 0) {
       uint256 contractIndex = tokenData.erc721childContractIndex[childContract];
       uint256 lastContractIndex = tokenData.erc721Contracts.length - 1;
       address lastContract = tokenData.erc721Contracts[lastContractIndex];
