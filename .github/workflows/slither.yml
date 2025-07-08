@@ -2,13 +2,9 @@ name: Slither Analysis
 
 on:
   push:
-    branches: [ main ]
-    paths:
-      - 'backend/contracts/**'
+    branches: [main]
   pull_request:
-    branches: [ main ]
-    paths:
-      - 'backend/contracts/**'
+    branches: [main]
 
 jobs:
   analyze:
