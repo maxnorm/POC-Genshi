@@ -1,4 +1,4 @@
-name: Smart Contract Tests Suite
+name: Build & Test Smart Contracts
 
 on:
   push:
@@ -38,6 +38,8 @@ jobs:
 
       - name: Run Smart Contract Tests
         run: npx hardhat test
+        env:
+          REPORT_GAS: true
 
       - name: Run Coverage
         run: npx hardhat coverage
