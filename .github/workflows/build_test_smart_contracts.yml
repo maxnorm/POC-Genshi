@@ -1,42 +1,43 @@
-name: Smart Contract Build & Test
+name: Smart Contract Tests Suite
 
 on:
   push:
-    branches: [ main ]
-    paths:
-      - 'backend/**'
+    branches: [main]
   pull_request:
-    branches: [ main ]
-    paths:
-      - 'backend/**'
+    branches: [main]
 
 jobs:
-  build:
+  backend-tests:
+    name: Smart Contract Tests
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./backend
-
     steps:
-    - uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18.x'
-        cache: 'npm'
-        cache-dependency-path: './backend/package-lock.json'
+      - name: Use Node.js 20.11.1
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.11.1
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Cache Backend Node Modules
+        id: cache-backend-node-modules
+        uses: actions/cache@v3
+        with:
+          path: 'backend/node_modules'
+          key: backend-node_modules-${{ hashFiles('backend/package-lock.json') }}
 
-    - name: Compile contracts
-      run: npx hardhat compile
+      - name: Install Backend Dependencies
+        if: steps.cache-backend-node-modules.outputs.cache-hit != 'true'
+        run: npm ci
 
-    - name: Run tests
-      run: npx hardhat test
-      env:
-        REPORT_GAS: true
+      - name: Compile contracts
+        run: npx hardhat compile
 
-    - name: Run coverage
-      run: npx hardhat coverage
+      - name: Run Smart Contract Tests
+        run: npx hardhat test
+
+      - name: Run Coverage
+        run: npx hardhat coverage
