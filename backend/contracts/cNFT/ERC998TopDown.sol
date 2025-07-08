@@ -264,10 +264,12 @@ abstract contract ERC998TopDown is
   }
 
   /// @notice Get a child token from another address
+  /// @notice The contract must be approved to transfer the child token to this contract
   /// @param from The address to get the child token from
   /// @param tokenId The token ID to receive the child token
   /// @param childContract The child contract address
   /// @param childTokenId The child token ID
+  /// @dev This function is used to get a child token from another address
   function getChild(
       address from,
       uint256 tokenId,
