@@ -275,12 +275,12 @@ abstract contract ERC998TopDown is
   function getChild(address from, uint256 tokenId, address childContract, uint256 childTokenId) external nonReentrant {
     _receiveChild(from, tokenId, childContract, childTokenId);
     require(
-      from == msg.sender ||
+      msg.sender == from ||
       ERC721(childContract).isApprovedForAll(from, msg.sender) ||
       ERC721(childContract).getApproved(childTokenId) == msg.sender,
       ERC998TopDown_CallerIsNotOwnerNorApprovedOperator(tokenId)
     );
-    ERC721(childContract).transferFrom(from, address(this), childTokenId);
+    ERC721(childContract).transferFrom(msg.sender, address(this), childTokenId);
   }
 
   /// @notice Check if a child token exists
