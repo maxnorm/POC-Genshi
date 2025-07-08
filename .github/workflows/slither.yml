@@ -19,7 +19,7 @@ jobs:
       - name: Run Slither
         uses: crytic/slither-action@v0.4.1
         with:
-          target: 'backend/'
+          target: 'backend/contracts/'
           sarif: results.sarif
           fail-on: medium
           solc-version: 0.8.28
