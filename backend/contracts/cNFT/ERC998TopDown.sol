@@ -60,10 +60,11 @@ abstract contract ERC998TopDown is
     mapping(address erc721Contract => uint256[] childTokenIds) erc721ChildTokenIds;
     mapping(address erc721Contract => mapping(uint256 childTokenId => uint256 index)) erc721ChildTokenIndex;
 
-
+    /**
     /// @notice ERC20 Management
     address[] erc20Contracts;
     mapping(address erc20Contract => uint256 balance) erc20Balances;
+    */
   }
 
   /// @notice Mapping from token ID to its composable data
@@ -235,7 +236,7 @@ abstract contract ERC998TopDown is
   /// @param toTokenId The token ID of the parent token
   /// @param childContract The child contract address
   /// @param childTokenId The child token ID
-  function transferChildToParent(uint256 fromTokenId, address toContract, uint256 toTokenId, address childContract, uint256 childTokenId, bytes calldata data) external nonReentrant {
+  function transferChildToParent(uint256 fromTokenId, address toContract, uint256 toTokenId, address childContract, uint256 childTokenId) external nonReentrant {
     require(toContract != address(0), ERC998TopDown_InvalidReceiver(toContract));
 
     uint256 parentTokenId = _childTokenOwner[childContract][childTokenId];
@@ -299,7 +300,7 @@ abstract contract ERC998TopDown is
   /// @return parentTokenId The ID of the parent token
   function ownerOfChild(address childContract, uint256 childTokenId) external view returns (bytes32 parentTokenOwner, uint256 parentTokenId) {
     parentTokenId = _childTokenOwner[childContract][childTokenId];
-    require(parentTokenId > 0 || _childTokenOwner[address(this)][parentTokenId] > 0);
+    require(parentTokenId > 0 || _childTokenOwner[address(this)][parentTokenId] > 0, ERC998TopDown_ChildTokenNotFound(childContract, childTokenId));
     return (_addressToBytes32(ownerOf(parentTokenId)), parentTokenId);
   }
 
@@ -310,7 +311,7 @@ abstract contract ERC998TopDown is
   /// @return parentTokenId The ID of the parent token
   function _ownerOfChild(address childContract, uint256 childTokenId) internal view returns (address parentTokenOwner, uint256 parentTokenId) {
     parentTokenId = _childTokenOwner[childContract][childTokenId];
-    require(parentTokenId > 0 || _childTokenOwner[address(this)][parentTokenId] > 0);
+    require(parentTokenId > 0 || _childTokenOwner[address(this)][parentTokenId] > 0, ERC998TopDown_ChildTokenNotFound(childContract, childTokenId));
     return (ownerOf(parentTokenId), parentTokenId);
   }
 
@@ -322,18 +323,23 @@ abstract contract ERC998TopDown is
   /// @dev This function is used to receive a child token from another contract
   function _receiveChild(address from, uint256 tokenId, address childContract, uint256 childTokenId) private {
     _requireOwned(tokenId);
+
     require(
-      _tokenData[tokenId].erc721ChildTokenIds[childContract][childTokenId] == 0, 
-      ERC998TopDown_ChildTokenAlreadyExists(tokenId, childContract, childTokenId)
+        _tokenData[tokenId].erc721ChildTokenIndex[childContract][childTokenId] == 0, 
+        ERC998TopDown_ChildTokenAlreadyExists(tokenId, childContract, childTokenId)
     );
-    uint256 childTokensLength = _tokenData[tokenId].erc721ChildTokenIds[childContract].length;
-    if (childTokensLength == 0) {
-      _tokenData[tokenId].erc721childContractIndex[childContract] = _tokenData[tokenId].erc721Contracts.length;
-      _tokenData[tokenId].erc721Contracts.push(childContract);
-    } 
+    
+    if (_tokenData[tokenId].erc721childContractIndex[childContract] == 0 && 
+        _tokenData[tokenId].erc721Contracts.length == 0) 
+    {
+        _tokenData[tokenId].erc721childContractIndex[childContract] = 1; // Use 1-based indexing
+        _tokenData[tokenId].erc721Contracts.push(childContract);
+    }
+
     _tokenData[tokenId].erc721ChildTokenIds[childContract].push(childTokenId);
-    _tokenData[tokenId].erc721ChildTokenIndex[childContract][childTokenId] = childTokensLength + 1;
+    _tokenData[tokenId].erc721ChildTokenIndex[childContract][childTokenId] = _tokenData[tokenId].erc721ChildTokenIds[childContract].length;
     _childTokenOwner[childContract][childTokenId] = tokenId;
+
     emit ReceivedChild(from, tokenId, childContract, childTokenId);
   }
 
@@ -476,8 +482,7 @@ abstract contract ERC998TopDown is
   /// @param data Additional data with no specified format
   /// @return bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))
   function onERC721Received(address operator, address from, uint256 childTokenId, bytes calldata data) 
-    external 
-    nonReentrant 
+    external
     override(IERC721Receiver, IERC998ERC721TopDown)
     returns (bytes4) 
   {
