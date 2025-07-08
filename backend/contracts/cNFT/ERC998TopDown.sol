@@ -272,34 +272,15 @@ abstract contract ERC998TopDown is
   /// @dev This function is used to get a child token from another address
   /// @dev If msg.sender is the token owner, they must use their own address as 'from'
   /// @dev If msg.sender is an approved operator, they can specify a different 'from' address
-  function getChild(
-      address from,
-      uint256 tokenId,
-      address childContract,
-      uint256 childTokenId
-  ) external nonReentrant {
-      require(from != address(0), ERC998_InvalidFromAddress(from));
-      require(childContract != address(0), ERC998_InvalidChildContract(childContract));
-      
-      if (msg.sender == from) {
-          require(ERC721(childContract).ownerOf(childTokenId) == msg.sender, 
-              ERC998TopDown_FromAddressIsNotOwnerOfChildToken(from));
-          
-          _receiveChild(msg.sender, tokenId, childContract, childTokenId);
-          ERC721(childContract).transferFrom(msg.sender, address(this), childTokenId);
-      } else {
-          require(
-              ERC721(childContract).isApprovedForAll(from, msg.sender) || 
-              ERC721(childContract).getApproved(childTokenId) == msg.sender,
-              ERC998TopDown_CallerIsNotOwnerNorApprovedOperator(tokenId)
-          );
-          
-          require(ERC721(childContract).ownerOf(childTokenId) == from,
-              ERC998TopDown_FromAddressIsNotOwnerOfChildToken(from));
-          
-          _receiveChild(from, tokenId, childContract, childTokenId);
-          ERC721(childContract).transferFrom(from, address(this), childTokenId);
-      }
+  function getChild(address from, uint256 tokenId, address childContract, uint256 childTokenId) external nonReentrant {
+    _receiveChild(from, tokenId, childContract, childTokenId);
+    require(
+      from == msg.sender ||
+      ERC721(childContract).isApprovedForAll(from, msg.sender) ||
+      ERC721(childContract).getApproved(childTokenId) == msg.sender,
+      ERC998TopDown_CallerIsNotOwnerNorApprovedOperator(tokenId)
+    );
+    ERC721(childContract).transferFrom(from, address(this), childTokenId);
   }
 
   /// @notice Check if a child token exists

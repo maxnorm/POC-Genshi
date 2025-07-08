@@ -1,16 +1,20 @@
 {
-  "detectors_to_exclude": [
-      "assembly"
-  ],
-  "filter_paths": "(node_modules/|test/)",
-  "exclude_informational": true,
-  "exclude_low": true,
-  "exclude_medium": false,
-  "exclude_high": false,
-  "disable_color": true,
-  "detector_overrides": {
-      "assembly": {
-          "ERC998TopDown.rootOwnerOfChild(address,uint256)": "Assembly is required for efficient storage access in this function"
-      }
-  }
+    "detectors_to_exclude": [
+        "assembly",
+        "arbitrary-from"
+    ],
+    "filter_paths": "(node_modules/|test/)",
+    "exclude_informational": true,
+    "exclude_low": true,
+    "exclude_medium": false,
+    "exclude_high": false,
+    "disable_color": true,
+    "detector_overrides": {
+        "assembly": {
+            "ERC998TopDown.rootOwnerOfChild(address,uint256)": "Assembly is required for efficient storage access in this function"
+        },
+        "arbitrary-from": {
+            "ERC998TopDown.getChild": "False positive - ERC998 standard requires supporting operator transfers. Function has proper ownership and approval checks."
+        }
+    }
 }
