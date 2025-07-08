@@ -7,8 +7,6 @@ on:
       - 'backend/contracts/**'
   pull_request:
     branches: [ main ]
-    paths:
-      - 'backend/contracts/**'
 
 jobs:
   analyze:
