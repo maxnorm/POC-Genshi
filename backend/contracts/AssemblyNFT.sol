@@ -12,14 +12,12 @@ contract AssemblyNFT is ERC998TopDown {
 
     event MintedAssembly(address indexed to, uint256 indexed tokenId);
 
-    constructor() ERC998TopDown("AssemblyNFT", "ASSEMBLY") {
-        // constructor
-    }
+    constructor() ERC998TopDown("AssemblyNFT", "ASSEMBLY") {}
 
-    function mint(address _to) public {
+    function mint(address to) public {
         _count++;
         uint256 tokenId = _count;
-        _mint(_to, tokenId);
-        emit MintedAssembly(_to, tokenId);
+        _mint(to, tokenId);
+        emit MintedAssembly(to, tokenId);
     }
 }

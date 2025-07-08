@@ -15,11 +15,11 @@ contract PieceNFT is ERC721, Ownable {
 
     constructor() ERC721("PieceNFT", "PIECE") Ownable(msg.sender) {}
 
-    function mint(address _to, bytes calldata _pieceType) public {
+    function mint(address to, bytes calldata pieceType_) public {
         _count++;
         uint256 tokenId = _count;
-        _mint(_to, tokenId);
-        pieceTypes[tokenId] = _pieceType;
-        emit MintedPiece(_to, tokenId);
+        _mint(to, tokenId);
+        pieceTypes[tokenId] = pieceType_;
+        emit MintedPiece(to, tokenId);
     }
 }

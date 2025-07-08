@@ -36,8 +36,3 @@ jobs:
           fail-on: medium
           solc-version: 0.8.28
           node-version: 18
-
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: results.sarif
