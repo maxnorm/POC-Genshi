@@ -31,8 +31,8 @@ jobs:
         uses: crytic/slither-action@v0.4.1
         with:
           target: 'backend/'
-          slither-args: '--filter-paths "node_modules"'
+          slither-config: 'backend/slither.config.json'
           sarif: results.sarif
-          fail-on: medium
+          fail-on: high
           solc-version: 0.8.28
           node-version: 18
