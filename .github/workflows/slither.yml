@@ -7,6 +7,8 @@ on:
       - 'backend/contracts/**'
   pull_request:
     branches: [ main ]
+    paths:
+      - 'backend/contracts/**'
 
 jobs:
   analyze:
@@ -18,24 +20,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
-          cache: 'npm'
-          cache-dependency-path: './backend/package-lock.json'
-
-      - name: Install dependencies
-        working-directory: ./backend
-        run: npm ci
-
       - name: Run Slither
         uses: crytic/slither-action@v0.4.1
         with:
           target: 'backend/contracts/'
           sarif: results.sarif
           fail-on: medium
-          node-version: 18
           solc-version: 0.8.28
 
       - name: Upload SARIF file
