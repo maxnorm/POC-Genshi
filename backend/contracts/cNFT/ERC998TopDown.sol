@@ -87,7 +87,7 @@ abstract contract ERC998TopDown is
   /// @param _tokenId The token ID of the parent token
   /// @dev This function is used to approve an address to transfer a child token
   function approve(address _to, uint256 _tokenId) public virtual override(ERC721) {
-    _requireOwned(_tokenId);
+    address owner = _requireOwned(_tokenId);
     address rootOwner = _getRootOwnerAddress(_tokenId);
     require(rootOwner != address(0), ERC998TopDown_HasNoRootOwner(_tokenId));
     require(
@@ -366,8 +366,7 @@ abstract contract ERC998TopDown is
   /// @notice Get the root owner address from bytes32 root owner value
   /// @dev Extracts address from magic value + address combination
   function _getRootOwnerAddress(uint256 _tokenId) internal view returns (address) {
-    bytes32 rootOwnerBytes = this.rootOwnerOf(_tokenId);
-    return address(uint160(uint256(rootOwnerBytes)));
+    return _bytes32ToAddress(rootOwnerOf(_tokenId));
   }
 
   // ========================================================
