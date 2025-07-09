@@ -27,8 +27,8 @@ contract Documents {
     string mimeType;
     string description;
     Version[] history;
-    address validatedBy;
-    uint256 validatedAt;
+    address lastValidator;
+    uint256 lastValidatedAt;
     address createdBy;
     uint256 createdAt;
   }
@@ -48,6 +48,10 @@ contract Documents {
 
   mapping(uint256 tokenId => mapping(uint256 id => Document document)) public documents;
 
+  /// @notice Gets a document of the NFT
+  /// @param tokenId The id of the NFT
+  /// @param docId The id of the document
+  /// @return The document
   function getDocument(uint256 tokenId, uint256 docId) public view returns (Document memory) {
     require(documents[tokenId][docId].createdBy != address(0), InvalidDocument(tokenId, docId));
     return documents[tokenId][docId];
@@ -84,10 +88,10 @@ contract Documents {
       hash: hash,
       mimeType: mimeType,
       description: description,
-      issuedBy: msg.sender,
       history: new Version[](0),
-      validatedBy: address(0),
-      validatedAt: 0,
+      lastValidator: address(0),
+      lastValidatedAt: 0,
+      createdBy: msg.sender,
       createdAt: block.timestamp
     });
 
@@ -131,11 +135,16 @@ contract Documents {
       Documents_InputsCannotBeEmpty()
     );
     require(documents[tokenId][docId].createdBy != address(0), InvalidDocument(tokenId, docId));
-    require(documents[tokenId][docId].hash != hash, Document_NoChangeInHash(tokenId, docId, hash));
+    require(
+      keccak256(abi.encodePacked(documents[tokenId][docId].hash)) != 
+      keccak256(abi.encodePacked(hash)), 
+      Document_NoChangeInHash(tokenId, docId, hash)
+    );
 
     Document storage document = documents[tokenId][docId];
 
     string memory oldUri = document.uri;
+    string memory oldHash = document.hash;
 
     document.uri = uri;
     document.hash = hash;
@@ -155,7 +164,7 @@ contract Documents {
       updatedAt: block.timestamp
     }));
 
-    document.validatedBy = address(0);
+    document.lastValidator = address(0);
 
     emit DocumentUpdated(tokenId, docId, name, uri, document.history.length);
   }
@@ -165,11 +174,12 @@ contract Documents {
   /// @param docId The id of the document
   function _validateDocument(uint256 tokenId, uint256 docId) internal {
     require(documents[tokenId][docId].createdBy != address(0), InvalidDocument(tokenId, docId));
-    require(documents[tokenId][docId].validatedBy == address(0), Document_AlreadyValidated(tokenId, docId));
+    require(documents[tokenId][docId].lastValidator == address(0), Document_AlreadyValidated(tokenId, docId));
 
     Document storage document = documents[tokenId][docId];
 
-    document.validatedBy = msg.sender;
+    document.lastValidator = msg.sender;
+    document.lastValidatedAt = block.timestamp;
 
     uint256 lastUpdateIdx = document.history.length - 1;
     document.history[lastUpdateIdx].validatedBy = msg.sender;

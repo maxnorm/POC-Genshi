@@ -2,7 +2,7 @@
 pragma solidity 0.8.28;
 
 error Attributes_KeyAlreadySet(uint256 tokenId, string key);
-error Attributes_KeyNotSet(uint256 tokenId, string key);
+error Attributes_InvalidKey(uint256 tokenId, string key);
 error Attributes_InputsCannotBeEmpty();
 error Attributes_AlreadyValidated(uint256 tokenId, string key);
 error Attributes_UpdateAlreadyValidated(uint256 tokenId, string key, uint256 updateId);
@@ -20,9 +20,10 @@ contract Attributes  {
   /// @notice The attribute of the NFT
   struct Attribute {
     string value;
-    address validatedBy;
-    address createdBy;
     Update[] history;
+    address lastValidator;
+    uint256 lastValidatedAt;
+    address createdBy;
     uint256 createdAt;
   }
 
@@ -32,8 +33,8 @@ contract Attributes  {
     string oldValue;
     string newValue;
     address updatedBy;
-    address validatedBy;
     uint256 updatedAt;
+    address validatedBy;
     uint256 validatedAt;
   }  
 
@@ -44,7 +45,7 @@ contract Attributes  {
   /// @param key The key of the attribute
   /// @return The attribute of the NFT
   function getAttribute(uint256 tokenId, string memory key) public view returns (Attribute memory) {
-    require(attributes[tokenId][key].setBy != address(0), Attributes_KeyNotSet(tokenId, key));
+    require(attributes[tokenId][key].createdBy != address(0), Attributes_InvalidKey(tokenId, key));
     return attributes[tokenId][key];
   }
 
@@ -55,12 +56,13 @@ contract Attributes  {
   /// @param units The units of the value (e.g., "mm", "MPa", "°C", "N/A")
   function _setAttribute(uint256 tokenId, string memory key, string memory value, string memory units) internal {
     require(bytes(key).length > 0 && bytes(value).length > 0, Attributes_InputsCannotBeEmpty());
-    require(attributes[tokenId][key].setBy == address(0), Attributes_KeyAlreadySet(tokenId, key));
+    require(attributes[tokenId][key].createdBy == address(0), Attributes_KeyAlreadySet(tokenId, key));
 
     attributes[tokenId][key] = Attribute({
       value: value,
-      validatedBy: address(0),
       history: new Update[](0),
+      lastValidator: address(0),
+      lastValidatedAt: 0,
       createdBy: msg.sender,
       createdAt: block.timestamp
     });
@@ -84,7 +86,7 @@ contract Attributes  {
   /// @param value The value of the attribute
   function _updateAttribute(uint256 tokenId, string memory key, string memory value) internal {
     require(bytes(key).length > 0 && bytes(value).length > 0, Attributes_InputsCannotBeEmpty());
-    require(attributes[tokenId][key].setBy != address(0), Attributes_KeyNotSet(tokenId, key));
+    require(attributes[tokenId][key].createdBy != address(0), Attributes_InvalidKey(tokenId, key));
 
     Attribute storage attribute = attributes[tokenId][key];
 
@@ -101,7 +103,7 @@ contract Attributes  {
       updatedAt: block.timestamp
     }));
 
-    attribute.validatedBy = address(0);
+    attribute.lastValidator = address(0);
 
     emit AttributeUpdated(tokenId, key, oldValue, value, msg.sender);
   }
@@ -110,12 +112,13 @@ contract Attributes  {
   /// @param tokenId The id of the NFT
   /// @param key The key of the attribute
   function _validateAttribute(uint256 tokenId, string memory key) internal {
-    require(attributes[tokenId][key].setBy != address(0), Attributes_KeyNotSet(tokenId, key));
-    require(attributes[tokenId][key].validatedBy == address(0), Attributes_AlreadyValidated(tokenId, key));
+    require(attributes[tokenId][key].createdBy != address(0), Attributes_InvalidKey(tokenId, key));
+    require(attributes[tokenId][key].lastValidator == address(0), Attributes_AlreadyValidated(tokenId, key));
 
     Attribute storage attribute = attributes[tokenId][key];
 
-    attribute.validatedBy = msg.sender;
+    attribute.lastValidator = msg.sender;
+    attribute.lastValidatedAt = block.timestamp;
 
     uint256 lastUpdateIdx = attribute.history.length - 1;
     attribute.history[lastUpdateIdx].validatedBy = msg.sender;
