@@ -17,24 +17,22 @@ contract TemplateRegistry is AccessManaged {
   struct AttributeDefinition {
     /// @notice e.g., "material", "diameter", "pressure_rating"
     string name;
-    /// @notice e.g., "string", "number", "date", "enum"
+    /// @notice "string", "number", "date", "enum"
     string attributeType;
-    /// @notice Is this attribute mandatory?
-    bool required;
-    /// @notice If type is enum, possible values
-    string[] enumValues;
+    /// @notice allowed values for enum type
+    string[] allowedValues;
     /// @notice e.g., "mm", "MPa", "°C", "N/A"
     string units;
+    bool required;
   } 
 
   /// @notice The definition of the document
   struct DocumentDefinition {
     /// @notice e.g., "material_cert", "pressure_test", "inspection_report"
     string docType;
-    /// @notice Is this document mandatory?
-    bool required;
     /// @notice e.g., ["application/pdf"]
     string[] allowedMimeTypes;
+    bool required;
   }
 
   /// @notice The template definition
