@@ -53,8 +53,7 @@ contract Attributes  {
   /// @param tokenId The id of the NFT
   /// @param key The key of the attribute
   /// @param value The value of the attribute
-  /// @param units The units of the value (e.g., "mm", "MPa", "°C", "N/A")
-  function _setAttribute(uint256 tokenId, string memory key, string memory value, string memory units) internal {
+  function _setAttribute(uint256 tokenId, string memory key, string memory value) internal {
     require(bytes(key).length > 0 && bytes(value).length > 0, Attributes_InputsCannotBeEmpty());
     require(attributes[tokenId][key].createdBy == address(0), Attributes_KeyAlreadySet(tokenId, key));
 

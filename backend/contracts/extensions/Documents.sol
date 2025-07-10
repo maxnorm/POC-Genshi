@@ -22,10 +22,10 @@ contract Documents {
   struct Document {
     uint256 id;
     string name;
+    string description;
     string uri;
     string hash;
     string mimeType;
-    string description;
     Version[] history;
     address lastValidator;
     uint256 lastValidatedAt;
@@ -40,9 +40,9 @@ contract Documents {
     string newHash;
     string newMimeType;
     string newDescription;
-    address updatedBy;
     address validatedBy;
     uint256 validatedAt;
+    address updatedBy;
     uint256 updatedAt;
   }
 
@@ -84,10 +84,10 @@ contract Documents {
     documents[tokenId][_count] = Document({
       id: _count,
       name: name,
+      description: description,
       uri: uri,
       hash: hash,
       mimeType: mimeType,
-      description: description,
       history: new Version[](0),
       lastValidator: address(0),
       lastValidatedAt: 0,
@@ -102,9 +102,9 @@ contract Documents {
       newHash: hash,
       newMimeType: mimeType,
       newDescription: description,
-      updatedBy: msg.sender,
       validatedBy: address(0),
       validatedAt: 0,
+      updatedBy: msg.sender,
       updatedAt: block.timestamp
     }));
 
@@ -158,9 +158,9 @@ contract Documents {
       newHash: hash,
       newMimeType: mimeType,
       newDescription: description,
-      updatedBy: msg.sender,
       validatedBy: address(0), 
       validatedAt: 0,
+      updatedBy: msg.sender,
       updatedAt: block.timestamp
     }));
 
@@ -178,7 +178,7 @@ contract Documents {
 
     Document storage document = documents[tokenId][docId];
 
-    document.lastValidator = msg.sender;
+    document.lastValidator = msg.sender; 
     document.lastValidatedAt = block.timestamp;
 
     uint256 lastUpdateIdx = document.history.length - 1;
