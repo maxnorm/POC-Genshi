@@ -14,7 +14,8 @@ abstract contract ChildContractValidator {
   }
 
   function _validateChild(address childContract) internal view {
-    for (uint256 i = 0; i < _allowedChildrenContracts.length; i++) {
+    uint256 length = _allowedChildrenContracts.length;
+    for (uint256 i = 0; i < length; i++) {
       if (_allowedChildrenContracts[i] == childContract) {
         return;
       }
