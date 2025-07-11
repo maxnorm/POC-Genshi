@@ -12,7 +12,7 @@ error Document_AlreadyValidated(uint256 tokenId, uint256 docId);
 /// @notice This contract is used to manage the documents attached to the NFTs
 /// @dev This contract is used to set, update, and validate documents
 contract Documents {
-  uint256 private _count;
+  uint256 private _docCount;
 
   event DocumentSet(uint256 tokenId, uint256 docId, string name, string uri);
   event DocumentUpdated(uint256 tokenId, uint256 docId, string name, string uri, uint256 version);
@@ -79,10 +79,10 @@ contract Documents {
       bytes(mimeType).length > 0,
       Documents_InputsCannotBeEmpty()
     );
-    _count++;
+    _docCount++;
 
-    documents[tokenId][_count] = Document({
-      id: _count,
+    documents[tokenId][_docCount] = Document({
+      id: _docCount,
       name: name,
       description: description,
       uri: uri,
@@ -95,8 +95,8 @@ contract Documents {
       createdAt: block.timestamp
     });
 
-    documents[tokenId][_count].history.push(Version({
-      id: documents[tokenId][_count].history.length,
+    documents[tokenId][_docCount].history.push(Version({
+      id: documents[tokenId][_docCount].history.length,
       oldUri: "",
       newUri: uri,
       newHash: hash,
@@ -108,7 +108,7 @@ contract Documents {
       updatedAt: block.timestamp
     }));
 
-    emit DocumentSet(tokenId, _count, name, uri);
+    emit DocumentSet(tokenId, _docCount, name, uri);
   }
 
   /// @notice Updates a document of the NFT
