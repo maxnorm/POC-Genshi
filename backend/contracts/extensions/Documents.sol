@@ -144,7 +144,6 @@ contract Documents {
     Document storage document = documents[tokenId][docId];
 
     string memory oldUri = document.uri;
-    string memory oldHash = document.hash;
 
     document.uri = uri;
     document.hash = hash;

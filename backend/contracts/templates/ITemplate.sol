@@ -4,8 +4,6 @@ pragma solidity 0.8.28;
 interface ITemplate {
     /// @notice The definition of the attribute
   struct AttributeDefinition {
-    /// @notice e.g., "material", "diameter", "pressure_rating"
-    string name;
     /// @notice "string", "number", "date", "enum"
     string attributeType;
     /// @notice allowed values for enum type
@@ -24,6 +22,12 @@ interface ITemplate {
     bool required;
   }
 
+  enum TemplateStatus {
+    DRAFT,
+    ACTIVE,
+    INACTIVE
+  }
+
   /// @notice The template definition
   struct Template {
     uint256 id;
@@ -31,9 +35,27 @@ interface ITemplate {
     address nftContract;
     /// @notice e.g., "pressure_vessel", "valve", "pipe"
     string templateType;
-    AttributeDefinition[] attributes;
-    DocumentDefinition[] documents;
+    /// @notice The keys of the template
+    string[] attributeKeys;
+    string[] documentKeys;
+    /// @notice The attributes of the template
+    mapping(string key => AttributeDefinition) attributes;
+    mapping(string key => DocumentDefinition) documents;
+    /// @notice Validation mapping for keys in attributes
+    mapping(string key => bool) validAttributes;
+    mapping(string key => bool) validDocuments;
     address[] allowedValidators;
-    bool active;
+    TemplateStatus status;
+  }
+
+  /// @notice The view of the template
+  /// @dev This is used to get the template without mapping which can't be returned
+  struct TemplateView {
+    uint256 id;
+    address nftContract;
+    string templateType;
+    string[] attributeKeys;
+    string[] documentKeys;
+    TemplateStatus status;
   }
 }

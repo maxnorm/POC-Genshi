@@ -4,13 +4,8 @@ pragma solidity 0.8.28;
 import {ITemplate} from "./ITemplate.sol";
 
 interface ITemplateRegistry {
-  function createTemplate(
-    address nftContract,
-    string memory templateType,
-    ITemplate.AttributeDefinition[] memory attributes,
-    ITemplate.DocumentDefinition[] memory documents,
-    address[] memory validators
-  ) external;
-  function deactivateTemplate(uint256 templateId) external;
-  function getTemplate(uint256 templateId) external view returns (ITemplate.Template memory);
+  function getTemplate(uint256 templateId) external view returns (ITemplate.TemplateView memory);
+  function getAttribute(uint256 templateId, string memory key) external view returns (ITemplate.AttributeDefinition memory);
+  function getDocument(uint256 templateId, string memory key) external view returns (ITemplate.DocumentDefinition memory);
+  function validateAttribute(uint256 templateId, string memory key, string memory value) external view;
 }
