@@ -197,7 +197,7 @@ abstract contract ERC998TopDown is
     require(tokenData.erc721ChildTokenIds[childContract].length > 0, ERC998TopDown_ChildContractNotFound(childContract));
     require(tokenData.erc721ChildTokenIndex[childContract][childTokenId] > 0, ERC998TopDown_ChildTokenNotFound(childContract, childTokenId));
 
-    address rootOwner = _bytes32ToAddress(rootOwnerOf(parentTokenId));
+    address rootOwner = bytes32ToAddress(rootOwnerOf(parentTokenId));
     require(
       rootOwner == msg.sender || 
       super.isApprovedForAll(rootOwner, msg.sender) ||
@@ -246,7 +246,7 @@ abstract contract ERC998TopDown is
     require(tokenData.erc721ChildTokenIds[childContract].length > 0, ERC998TopDown_ChildContractNotFound(childContract));
     require(tokenData.erc721ChildTokenIndex[childContract][childTokenId] > 0, ERC998TopDown_ChildTokenNotFound(childContract, childTokenId));
 
-    address rootOwner = _bytes32ToAddress(rootOwnerOf(parentTokenId));
+    address rootOwner = bytes32ToAddress(rootOwnerOf(parentTokenId));
     require(
       rootOwner == msg.sender || 
       super.isApprovedForAll(rootOwner, msg.sender) ||
@@ -321,7 +321,7 @@ abstract contract ERC998TopDown is
   /// @param childContract The child contract address
   /// @param childTokenId The child token ID
   /// @dev This function is used to receive a child token from another contract
-  function _receiveChild(address from, uint256 tokenId, address childContract, uint256 childTokenId) private {
+  function _receiveChild(address from, uint256 tokenId, address childContract, uint256 childTokenId) internal {
     _requireOwned(tokenId);
 
     require(
@@ -390,7 +390,7 @@ abstract contract ERC998TopDown is
   /// @param tokenId The token ID of the parent token
   /// @return address of the root owner
   function _getRootOwnerAddress(uint256 tokenId) internal view returns (address) {
-    return _bytes32ToAddress(rootOwnerOf(tokenId));
+    return bytes32ToAddress(rootOwnerOf(tokenId));
   }
 
   // ========================================================
@@ -487,6 +487,7 @@ abstract contract ERC998TopDown is
   function onERC721Received(address operator, address from, uint256 childTokenId, bytes calldata data) 
     external
     override(IERC721Receiver, IERC998ERC721TopDown)
+    virtual
     returns (bytes4) 
   {
     uint256 parentTokenId = abi.decode(data, (uint256));
@@ -496,20 +497,20 @@ abstract contract ERC998TopDown is
   }
 
   // ========================================================
-  // Internal Helper Functions
+  // Helper Functions
   // ========================================================
+
+  /// @dev Extracts address from bytes32 that contains magic value
+  /// @param data The bytes32 value to convert
+  /// @return The address extracted from the bytes32 value
+  function bytes32ToAddress(bytes32 data) public pure returns (address) {
+    return address(uint160(uint256(data)));
+  }
 
   /// @dev Converts an address to bytes32 with magic value
   /// @param addr The address to convert
   /// @return The bytes32 value with magic value
   function _addressToBytes32(address addr) internal pure returns (bytes32) {
     return ERC998_MAGIC_VALUE << 224 | bytes32(uint256(uint160(addr)));
-  }
-
-  /// @dev Extracts address from bytes32 that contains magic value
-  /// @param data The bytes32 value to convert
-  /// @return The address extracted from the bytes32 value
-  function _bytes32ToAddress(bytes32 data) internal pure returns (address) {
-    return address(uint160(uint256(data)));
   }
 }

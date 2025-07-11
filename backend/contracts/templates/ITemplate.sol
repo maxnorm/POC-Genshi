@@ -44,7 +44,6 @@ interface ITemplate {
     /// @notice Validation mapping for keys in attributes
     mapping(string key => bool) validAttributes;
     mapping(string key => bool) validDocuments;
-    address[] allowedValidators;
     TemplateStatus status;
   }
 

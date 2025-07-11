@@ -2,7 +2,7 @@
 pragma solidity 0.8.28;
 
 import {AccessManager} from "./AccessManager.sol";
-import "./AccessErrors.sol";
+import {Access_ManagerAddressCannotBeZero, Access_NotAuthorized} from "./AccessErrors.sol";
 
 /// @title AccessManaged
 /// @notice Abstract contract that provides access management functionality

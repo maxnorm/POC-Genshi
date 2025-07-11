@@ -16,3 +16,4 @@ error Template_InvalidDocumentKey(uint256 templateId, string key);
 error Template_InvalidEnumValue(string key, string value);
 error Template_InvalidNumberValue(string key, string value);
 error Template_InvalidBooleanValue(string key, string value);
+error Template_InvalidMimeType(string mimeType);
