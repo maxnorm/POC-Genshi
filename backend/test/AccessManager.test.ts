@@ -24,7 +24,7 @@ describe("AccessManager", function () {
       await accessManager.grantRole(await accessManager.PIECE_MANAGER(), user1.address);
       expect(await accessManager.hasRole(await accessManager.PIECE_MANAGER(), user1.address)).to.be.true;
 
-      await expect(accessManager.connect(user1).grantRole(await accessManager.PIECE_MINTER(), user2.address))
+      await accessManager.connect(user1).grantRole(await accessManager.PIECE_MINTER(), user2.address);
       expect(await accessManager.hasRole(await accessManager.PIECE_MINTER(), user2.address)).to.be.true;
     });
 
@@ -32,7 +32,7 @@ describe("AccessManager", function () {
       await accessManager.grantRole(await accessManager.PIECE_MANAGER(), user1.address);
       expect(await accessManager.hasRole(await accessManager.PIECE_MANAGER(), user1.address)).to.be.true;
 
-      await expect(accessManager.revokeRole(await accessManager.PIECE_MANAGER(), user1.address))
+      await accessManager.revokeRole(await accessManager.PIECE_MANAGER(), user1.address);
       expect(await accessManager.hasRole(await accessManager.PIECE_MANAGER(), user1.address)).to.be.false;
     });
 
