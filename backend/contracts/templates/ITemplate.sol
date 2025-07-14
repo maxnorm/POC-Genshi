@@ -17,8 +17,8 @@ interface ITemplate {
 
   /// @notice The definition of the document
   struct DocumentDefinition {
-    /// @notice e.g., "material_cert", "pressure_test", "inspection_report"
-    string docType;
+    /// @notice e.g., "Material Certificate", "Pressure Test", "Inspection Report"
+    string name;
     /// @notice e.g., ["application/pdf"]
     string[] allowedMimeTypes;
     bool required;
@@ -36,7 +36,7 @@ interface ITemplate {
     /// @notice The NFT contract that this template is for
     address nftContract;
     /// @notice e.g., "pressure_vessel", "valve", "pipe"
-    string templateType;
+    string templateName;
     /// @notice The keys of the template
     string[] attributeKeys;
     string[] documentKeys;
@@ -54,7 +54,7 @@ interface ITemplate {
   struct TemplateView {
     uint256 id;
     address nftContract;
-    string templateType;
+    string templateName;
     string[] attributeKeys;
     string[] documentKeys;
     TemplateStatus status;

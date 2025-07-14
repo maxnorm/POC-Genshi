@@ -22,9 +22,9 @@ import {
 contract TemplateRegistry is AccessManaged, ITemplateRegistry {
   uint256 private _count;
 
-  event Template_Created(uint256 indexed templateId, string templateType, address indexed nftContract);
-  event Template_Deactivated(uint256 indexed templateId, string templateType, address indexed nftContract);
-  event Template_Activated(uint256 indexed templateId, string templateType, address indexed nftContract);
+  event Template_Created(uint256 indexed templateId, string templateName, address indexed nftContract);
+  event Template_Deactivated(uint256 indexed templateId, string templateName, address indexed nftContract);
+  event Template_Activated(uint256 indexed templateId, string templateName, address indexed nftContract);
 
   mapping(uint256 => ITemplate.Template) public templates;
   mapping(address => uint256[]) public templatesByNFTContract;
@@ -33,20 +33,20 @@ contract TemplateRegistry is AccessManaged, ITemplateRegistry {
   
   /// @notice Creates a new template  
   /// @param nftContract The NFT contract that this template is for
-  /// @param templateType The type of the template
+  /// @param templateName The name of the template
   function createTemplate(
     address nftContract,
-    string memory templateType
+    string memory templateName
   ) external onlyRole(accessManager.TEMPLATE_MANAGER()) {
     _count++;
       
     ITemplate.Template storage newTemplate = templates[_count];
     newTemplate.id = _count;
     newTemplate.nftContract = nftContract;
-    newTemplate.templateType = templateType;
+    newTemplate.templateName = templateName;
     templatesByNFTContract[nftContract].push(_count);
 
-    emit Template_Created(_count, templateType, nftContract);
+    emit Template_Created(_count, templateName, nftContract);
   }
 
   /// @notice Adds an attribute to a template
@@ -58,6 +58,7 @@ contract TemplateRegistry is AccessManaged, ITemplateRegistry {
     external onlyRole(accessManager.TEMPLATE_MANAGER()) 
   {
     require(templateId <= _count, Template_InvalidTemplate(templateId));
+    require(templates[templateId].status == ITemplate.TemplateStatus.DRAFT, Template_InvalidTemplateStatus(templateId, ITemplate.TemplateStatus.DRAFT));
     templates[templateId].attributes[key] = attribute;
     templates[templateId].attributeKeys.push(key);
     templates[templateId].validAttributes[key] = true;
@@ -72,6 +73,7 @@ contract TemplateRegistry is AccessManaged, ITemplateRegistry {
     external onlyRole(accessManager.TEMPLATE_MANAGER()) 
   {
     require(templateId <= _count, Template_InvalidTemplate(templateId));
+    require(templates[templateId].status == ITemplate.TemplateStatus.DRAFT, Template_InvalidTemplateStatus(templateId, ITemplate.TemplateStatus.DRAFT));
     templates[templateId].documents[key] = document;
     templates[templateId].documentKeys.push(key);
     templates[templateId].validDocuments[key] = true;
@@ -83,7 +85,7 @@ contract TemplateRegistry is AccessManaged, ITemplateRegistry {
     require(templateId <= _count, Template_InvalidTemplate(templateId));
     require(templates[templateId].status == ITemplate.TemplateStatus.DRAFT, Template_InvalidTemplateStatus(templateId, ITemplate.TemplateStatus.DRAFT));
     templates[templateId].status = ITemplate.TemplateStatus.ACTIVE;
-    emit Template_Activated(templateId, templates[templateId].templateType, templates[templateId].nftContract);
+    emit Template_Activated(templateId, templates[templateId].templateName, templates[templateId].nftContract);
   }
 
   /// @notice Deactivates a template
@@ -92,7 +94,7 @@ contract TemplateRegistry is AccessManaged, ITemplateRegistry {
     require(templateId <= _count, Template_InvalidTemplate(templateId));
     require(templates[templateId].status == ITemplate.TemplateStatus.ACTIVE, Template_InvalidTemplateStatus(templateId, ITemplate.TemplateStatus.ACTIVE));
     templates[templateId].status = ITemplate.TemplateStatus.INACTIVE;
-    emit Template_Deactivated(templateId, templates[templateId].templateType, templates[templateId].nftContract);
+    emit Template_Deactivated(templateId, templates[templateId].templateName, templates[templateId].nftContract);
   }
 
   /// @notice Gets a template by id
@@ -102,7 +104,7 @@ contract TemplateRegistry is AccessManaged, ITemplateRegistry {
     return ITemplate.TemplateView({
       id: templates[templateId].id,
       nftContract: templates[templateId].nftContract,
-      templateType: templates[templateId].templateType,
+      templateName: templates[templateId].templateName,
       attributeKeys: templates[templateId].attributeKeys,
       documentKeys: templates[templateId].documentKeys,
       status: templates[templateId].status
