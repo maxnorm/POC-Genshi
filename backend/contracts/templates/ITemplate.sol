@@ -4,6 +4,8 @@ pragma solidity 0.8.28;
 interface ITemplate {
     /// @notice The definition of the attribute
   struct AttributeDefinition {
+    /// @notice e.g., "Serial Number", "Material", "Pressure"
+    string name;
     /// @notice "string", "number", "date", "enum"
     string attributeType;
     /// @notice allowed values for enum type

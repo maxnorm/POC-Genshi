@@ -22,9 +22,9 @@ import {
 contract TemplateRegistry is AccessManaged, ITemplateRegistry {
   uint256 private _count;
 
-  event TemplateCreated(uint256 indexed templateId, string templateType, address indexed nftContract);
-  event TemplateDeactivated(uint256 indexed templateId, string templateType, address indexed nftContract);
-  event TemplateActivated(uint256 indexed templateId, string templateType, address indexed nftContract);
+  event Template_Created(uint256 indexed templateId, string templateType, address indexed nftContract);
+  event Template_Deactivated(uint256 indexed templateId, string templateType, address indexed nftContract);
+  event Template_Activated(uint256 indexed templateId, string templateType, address indexed nftContract);
 
   mapping(uint256 => ITemplate.Template) public templates;
   mapping(address => uint256[]) public templatesByNFTContract;
@@ -46,7 +46,7 @@ contract TemplateRegistry is AccessManaged, ITemplateRegistry {
     newTemplate.templateType = templateType;
     templatesByNFTContract[nftContract].push(_count);
 
-    emit TemplateCreated(_count, templateType, nftContract);
+    emit Template_Created(_count, templateType, nftContract);
   }
 
   /// @notice Adds an attribute to a template
@@ -57,7 +57,7 @@ contract TemplateRegistry is AccessManaged, ITemplateRegistry {
   function addAttribute(uint256 templateId, string memory key, ITemplate.AttributeDefinition memory attribute) 
     external onlyRole(accessManager.TEMPLATE_MANAGER()) 
   {
-    require(templates[templateId].id <= _count, Template_InvalidTemplate(templateId));
+    require(templateId <= _count, Template_InvalidTemplate(templateId));
     templates[templateId].attributes[key] = attribute;
     templates[templateId].attributeKeys.push(key);
     templates[templateId].validAttributes[key] = true;
@@ -71,7 +71,7 @@ contract TemplateRegistry is AccessManaged, ITemplateRegistry {
   function addDocument(uint256 templateId, string memory key, ITemplate.DocumentDefinition memory document) 
     external onlyRole(accessManager.TEMPLATE_MANAGER()) 
   {
-    require(templates[templateId].id <= _count, Template_InvalidTemplate(templateId));
+    require(templateId <= _count, Template_InvalidTemplate(templateId));
     templates[templateId].documents[key] = document;
     templates[templateId].documentKeys.push(key);
     templates[templateId].validDocuments[key] = true;
@@ -80,25 +80,25 @@ contract TemplateRegistry is AccessManaged, ITemplateRegistry {
   /// @notice Activates a template
   /// @param templateId The id of the template to activate
   function activateTemplate(uint256 templateId) external onlyRole(accessManager.TEMPLATE_MANAGER()) {
-    require(templates[templateId].id <= _count, Template_InvalidTemplate(templateId));
+    require(templateId <= _count, Template_InvalidTemplate(templateId));
     require(templates[templateId].status == ITemplate.TemplateStatus.DRAFT, Template_InvalidTemplateStatus(templateId, ITemplate.TemplateStatus.DRAFT));
     templates[templateId].status = ITemplate.TemplateStatus.ACTIVE;
-    emit TemplateActivated(templateId, templates[templateId].templateType, templates[templateId].nftContract);
+    emit Template_Activated(templateId, templates[templateId].templateType, templates[templateId].nftContract);
   }
 
   /// @notice Deactivates a template
   /// @param templateId The id of the template to deactivate
   function deactivateTemplate(uint256 templateId) external onlyRole(accessManager.TEMPLATE_MANAGER()) {
-    require(templates[templateId].id <= _count, Template_InvalidTemplate(templateId));
+    require(templateId <= _count, Template_InvalidTemplate(templateId));
     require(templates[templateId].status == ITemplate.TemplateStatus.ACTIVE, Template_InvalidTemplateStatus(templateId, ITemplate.TemplateStatus.ACTIVE));
     templates[templateId].status = ITemplate.TemplateStatus.INACTIVE;
-    emit TemplateDeactivated(templateId, templates[templateId].templateType, templates[templateId].nftContract);
+    emit Template_Deactivated(templateId, templates[templateId].templateType, templates[templateId].nftContract);
   }
 
   /// @notice Gets a template by id
   /// @param templateId The id of the template to get
   function getTemplate(uint256 templateId) external view returns (ITemplate.TemplateView memory) {
-    require(templates[templateId].id <= _count, Template_InvalidTemplate(templateId));
+    require(templateId <= _count, Template_InvalidTemplate(templateId));
     return ITemplate.TemplateView({
       id: templates[templateId].id,
       nftContract: templates[templateId].nftContract,
@@ -113,7 +113,7 @@ contract TemplateRegistry is AccessManaged, ITemplateRegistry {
   /// @param templateId The id of the template to get the attribute from
   /// @param key The key of the attribute to get
   function getAttribute(uint256 templateId, string memory key) external view returns (ITemplate.AttributeDefinition memory) {
-    require(templates[templateId].id <= _count, Template_InvalidTemplate(templateId));
+    require(templateId <= _count, Template_InvalidTemplate(templateId));
     require(templates[templateId].validAttributes[key], Template_InvalidAttributeKey(templateId, key));
     return templates[templateId].attributes[key];
   }
@@ -122,7 +122,7 @@ contract TemplateRegistry is AccessManaged, ITemplateRegistry {
   /// @param templateId The id of the template to get the document from
   /// @param key The key of the document to get
   function getDocument(uint256 templateId, string memory key) external view returns (ITemplate.DocumentDefinition memory) {
-    require(templates[templateId].id <= _count, Template_InvalidTemplate(templateId));
+    require(templateId <= _count, Template_InvalidTemplate(templateId));
     require(templates[templateId].validDocuments[key], Template_InvalidDocumentKey(templateId, key));
     return templates[templateId].documents[key];
   }
@@ -132,7 +132,7 @@ contract TemplateRegistry is AccessManaged, ITemplateRegistry {
   /// @param key The key of the attribute to validate
   /// @param value The value of the attribute to validate
   function validateAttribute(uint256 templateId, string memory key, string memory value) external view {
-    require(templates[templateId].id <= _count, Template_InvalidTemplate(templateId));
+    require(templateId <= _count, Template_InvalidTemplate(templateId));
     require(templates[templateId].validAttributes[key], Template_InvalidAttributeKey(templateId, key));
 
     ITemplate.AttributeDefinition memory attribute = templates[templateId].attributes[key];
@@ -147,7 +147,7 @@ contract TemplateRegistry is AccessManaged, ITemplateRegistry {
   }
 
   function validateDocument(uint256 templateId, string memory key, string memory mimeType) external view {
-    require(templates[templateId].id <= _count, Template_InvalidTemplate(templateId));
+    require(templateId <= _count, Template_InvalidTemplate(templateId));
     require(templates[templateId].validDocuments[key], Template_InvalidDocumentKey(templateId, key));
 
     ITemplate.DocumentDefinition memory document = templates[templateId].documents[key];
