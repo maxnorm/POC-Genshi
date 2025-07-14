@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.28;
 
-import {ERC998TopDown} from "./ERC998TopDown.sol";
+import {ERC998TopDown} from "../ERC998TopDown.sol";
 
 contract SampleERC998 is ERC998TopDown {
     uint256 private _count;

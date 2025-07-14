@@ -1,9 +1,5 @@
-const { expect } = require("chai");
-const hre = require("hardhat");
-const { PANIC_CODES } = require("@nomicfoundation/hardhat-chai-matchers/panic");
-const { loadFixture } = require("@nomicfoundation/hardhat-toolbox/network-helpers");
-const { ethers } = require("hardhat");
-
+import { expect } from "chai";
+import { ethers } from "hardhat";
 
 describe("ERC998TopDown contract", function () {
   let erc998: any;
@@ -533,5 +529,6 @@ describe("ERC998TopDown contract", function () {
     it("should handle nested composable transfers");
     it("should handle multiple child transfers in single transaction");
     it("should maintain correct state after multiple operations");
+    it("should fail when circular ownership");
   });
 });

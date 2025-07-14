@@ -21,7 +21,7 @@ abstract contract AccessManaged {
   /// @param role The role to check for
   /// @dev Reverts if the caller does not have the specified role
   modifier onlyRole(bytes32 role) {
-    if(!accessManager.hasRole(role, msg.sender)) revert Access_NotAuthorized(role);
+    require(accessManager.hasRole(role, msg.sender), Access_NotAuthorized(role));
     _;
   }
 }
