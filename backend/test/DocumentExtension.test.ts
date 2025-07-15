@@ -2,11 +2,11 @@ const { ethers } = require("hardhat");
 const { expect } = require("chai");
 
 describe("DocumentExtension", function () {
-  let documentsNFT;
-  let owner;
-  let user1;
-  let user2;
-  let tokenId;
+  let documentsNFT: any;
+  let owner: any;
+  let user1: any;
+  let user2: any;
+  let tokenId: any;
 
   beforeEach(async function () {
     [owner, user1, user2] = await ethers.getSigners();
@@ -108,7 +108,7 @@ describe("DocumentExtension", function () {
     const uri = "https://test.com";
     const hash = "0x1234567890";
     const mimeType = "application/pdf";
-    let blockTimestamp;
+    let blockTimestamp: any;
 
 
     beforeEach(async function () {
@@ -240,7 +240,8 @@ describe("DocumentExtension", function () {
     const uri = "https://test.com";
     const hash = "0x1234567890";
     const mimeType = "application/pdf";
-    let blockTimestamp;
+    let blockTimestamp: any;
+    let newBlockTimestamp: any;
 
     beforeEach(async function () {
       const tx = await documentsNFT.setDocument(tokenId, name, description, uri, hash, mimeType);
