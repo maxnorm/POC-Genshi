@@ -2,7 +2,6 @@
 pragma solidity 0.8.28;
 
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import {ERC721Enumerable} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import {AccessManaged} from "./access/AccessManaged.sol";
 import {Documents} from "./extensions/Documents.sol";
 import {Attributes} from "./extensions/Attributes.sol";
@@ -36,7 +35,7 @@ contract PieceNFT is ERC721, Documents, Attributes, AccessManaged, TokenAuthoriz
   {
     ITemplate.TemplateView memory template = _templateRegistry.getTemplate(templateId);
     require(template.nftContract == address(this), Template_InvalidTemplateForNFT(templateId));
-    require(template.status == ITemplate.TemplateStatus.ACTIVE, Template_InvalidTemplateStatus(template.id, template.status));
+    require(template.status == ITemplate.TemplateStatus.ACTIVE, Template_InvalidTemplateStatus(template.id, ITemplate.TemplateStatus.ACTIVE));
 
     _count++;
     uint256 tokenId = _count;
