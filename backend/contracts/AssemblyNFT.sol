@@ -35,7 +35,7 @@ contract AssemblyNFT is ERC998TopDown, Documents, Attributes, AccessManaged, Chi
   {
     ITemplate.TemplateView memory template = _templateRegistry.getTemplate(templateId);
     require(template.nftContract == address(this), Template_InvalidTemplateForNFT(templateId));
-    require(template.status == ITemplate.TemplateStatus.ACTIVE, Template_InvalidTemplateStatus(template.id, template.status));
+    require(template.status == ITemplate.TemplateStatus.ACTIVE, Template_InvalidTemplateStatus(template.id, ITemplate.TemplateStatus.ACTIVE));
 
     _count++;
     uint256 tokenId = _count;
