@@ -71,8 +71,8 @@ The project begins with a proof of concept (POC) applied to a nuclear reactor ve
 - MetaMask wallet
 
 ## Environment
-### 2. Smart Contract (Backend)
-#### 2.1 - Start Local Blockchain & Deploy Contract
+### Smart Contract (Backend)
+#### 1. Start Local Blockchain & Deploy Contract
 ```sh
 cd backend
 npm install
@@ -84,15 +84,15 @@ npx hardhat node
 npx hardhat run ./scripts/deploy.ts --network localhost
 ```
 
-#### 2.1 Deploy to Public Testnet
+#### 2 Deploy to Public Testnet
 See ```backend/hardhat.config.ts``` for available network
 ```sh
 npx hardhat run ./scripts/deploy.ts --network sepolia
 npx hardhat run ./scripts/deploy.ts --network holesky
 ```
 
-### 3. Deployed Contracts
-#### 3.1 Sepolia
+### Deployed Contracts
+#### Sepolia Network
 <b>AccessManager</b>: [0x25fAd169401842CbEFF80b25Ae333876A389Af6C](https://sepolia.etherscan.io/address/0x25fAd169401842CbEFF80b25Ae333876A389Af6C#code)<br>
 <b>TemplateRegistry</b>: [0x62f857A13A493Eb0F2C5E436974a96b06448FD1f](https://sepolia.etherscan.io/address/0x62f857A13A493Eb0F2C5E436974a96b06448FD1f#code)<br>
 <b>PieceNFT</b>:  [0x3CfF0a397d75050f7a34B2EdF32E2053aB504bD5](https://sepolia.etherscan.io/address/0x3CfF0a397d75050f7a34B2EdF32E2053aB504bD5#code)<br>
