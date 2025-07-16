@@ -6,6 +6,8 @@ It enables the identification, certification, and auditing of critical equipment
 
 The project begins with a proof of concept (POC) applied to a nuclear reactor vessel, with a medium-term ambition for cross-industry adoption.
 
+[Try it now](https://poc-genshi.vercel.app/)
+
 ## Features
 ### NFT System
 - **Three NFT Types**
