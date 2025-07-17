@@ -61,6 +61,7 @@ abstract contract ERC998TopDown is
     mapping(address erc721Contract => mapping(uint256 childTokenId => uint256 index)) erc721ChildTokenIndex;
 
     /**
+    // TODO: Add ERC20 support later
     /// @notice ERC20 Management
     address[] erc20Contracts;
     mapping(address erc20Contract => uint256 balance) erc20Balances;
