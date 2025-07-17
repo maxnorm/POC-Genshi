@@ -22,10 +22,10 @@ function AuthPage() {
       <p className="text-sm sm:text-md max-w-sm sm:max-w-fit text-center">Connectez votre wallet pour accéder au tableau de bord.</p>
       <ConnectButton label="Se connecter"/>
       <Link href="/" className="text-sm sm:text-md text-genshi-blue-secondary">
-        Retour à l'accueil
+        {"Retour à l'accueil"}
       </Link>
       <span className="pt-16 text-md sm:text-lg flex flex-col items-center justify-center">
-        <span className="font-semibold">Besoin d'aide?</span>
+        <span className="font-semibold">{"Besoin d'aide?"}</span>
         <a href="mailto:support@genshi.xyz" className="hover:underline">
           Contactez nous
         </a>
