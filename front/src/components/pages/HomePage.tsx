@@ -35,7 +35,7 @@ function HomePage() {
         <ConnectButton label="Se connecter"/>
       )}
       <span className="pt-16 text-md sm:text-lg flex flex-col items-center justify-center">
-        Questions sur GENSHI?{" "}
+        <span className="font-semibold">Questions sur GENSHI?</span>
         <a href="mailto:support@genshi.xyz" className="hover:underline">
           Contactez notre équipe
         </a>

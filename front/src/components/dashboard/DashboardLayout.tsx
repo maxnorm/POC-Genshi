@@ -43,7 +43,7 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <div className="flex min-h-screen">
-        <Sidebar>
+        <Sidebar className="border-r border-genshi-blue-secondary/20">
           <SidebarHeader className="flex flex-col">
             <div className="flex items-center gap-2 px-2 rounded-xl p-1">
               <Image src="/LOGO-GENSHI.png" alt="GENSHI" width={75} height={75} className="w-14 h-14  bg-genshi-blue-secondary rounded-xl"/>
@@ -52,17 +52,17 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
               </div>
             </div>
           </SidebarHeader>
-          <SidebarContent>
+          <SidebarContent >
             <SidebarGroup>
-              <SidebarGroupLabel className="text-genshi-blue-secondary">Navigation</SidebarGroupLabel>
+              <SidebarGroupLabel className="text-genshi-blue-secondary text-md">Navigation</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {navigation.map((item) => (
-                    <SidebarMenuItem key={item.name} className="">
-                      <SidebarMenuButton asChild>
+                    <SidebarMenuItem key={item.name} className="border-b border-genshi-blue-secondary/20 hover:border-b-0">
+                      <SidebarMenuButton asChild >
                         <Link href={item.href}>
-                          <item.icon className="h-4 w-4" />
-                          <span>{item.name}</span>
+                          <item.icon className="h-6 w-6" />
+                          <span className="text-md">{item.name}</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -72,7 +72,10 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
             </SidebarGroup>
           </SidebarContent>
           <SidebarFooter>
-            <p className="text-sm text-muted-foreground">GENSHI© {new Date().getFullYear()} - All rights reserved</p>
+            <p className="text-sm text-genshi-blue bg-genshi-blue-secondary px- py-2 rounded-lg text-center font-semibold flex flex-col items-center justify-center">
+              <span>GENSHI© {new Date().getFullYear()}</span>
+              <span className="text-xs">Tous droits réservés</span>
+            </p>
           </SidebarFooter>
         </Sidebar>
         <DashboardInset>

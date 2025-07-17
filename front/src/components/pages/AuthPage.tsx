@@ -24,10 +24,10 @@ function AuthPage() {
       <Link href="/" className="text-sm sm:text-md text-genshi-blue-secondary">
         Retour à l'accueil
       </Link>
-      <span className="pt-16 text-md sm:text-lg">
-        Besoin d'aide?{" "}
+      <span className="pt-16 text-md sm:text-lg flex flex-col items-center justify-center">
+        <span className="font-semibold">Besoin d'aide?</span>
         <a href="mailto:support@genshi.xyz" className="hover:underline">
-          Contactez-nous
+          Contactez nous
         </a>
       </span>
     </div>
