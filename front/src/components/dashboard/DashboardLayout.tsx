@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/sidebar";
 import Image from "next/image";
 import DashboardInset from "./DashboardInset";
+import CustomConnectButton from "../CustomConnectButton";
 
 function DashboardLayout({ children }: { children: React.ReactNode }) {
 
@@ -44,11 +45,12 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
       <div className="flex min-h-screen">
         <Sidebar>
           <SidebarHeader className="flex flex-col">
-            <div className="flex items-center gap-2 px-2 bg-genshi-blue-secondary rounded-xl p-1">
-              <Image src="/LOGO-GENSHI.png" alt="GENSHI" width={75} height={75} className="w-12 h-12" />
-              <span className="text-xl font-bold text-genshi-blue">GENSHI</span>
+            <div className="flex items-center gap-2 px-2 rounded-xl p-1">
+              <Image src="/LOGO-GENSHI.png" alt="GENSHI" width={75} height={75} className="w-14 h-14  bg-genshi-blue-secondary rounded-xl"/>
+              <div className="w-full flex justify-center">
+                <CustomConnectButton />
+              </div>
             </div>
-            <ConnectButton />
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>
