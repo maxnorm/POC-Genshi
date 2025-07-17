@@ -45,8 +45,8 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
       <div className="flex min-h-screen">
         <Sidebar className="border-r border-genshi-blue-secondary/20">
           <SidebarHeader className="flex flex-col">
-            <div className="flex items-center gap-2 px-2 rounded-xl p-1">
-              <Image src="/LOGO-GENSHI.png" alt="GENSHI" width={75} height={75} className="w-14 h-14  bg-genshi-blue-secondary rounded-xl"/>
+            <div className="flex items-center gap-2 px-2 rounded-xl p-1 bg-genshi-blue-secondary rounded-xl">
+              <Image src="/LOGO-GENSHI.png" alt="GENSHI" width={75} height={75} className="w-14 h-14"/>
               <div className="w-full flex justify-center">
                 <CustomConnectButton />
               </div>

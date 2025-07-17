@@ -1,7 +1,7 @@
 'use client';
 
 import '@rainbow-me/rainbowkit/styles.css';
-import {getDefaultConfig, RainbowKitProvider, darkTheme} from '@rainbow-me/rainbowkit';
+import {getDefaultConfig, RainbowKitProvider, lightTheme} from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
 import {QueryClientProvider, QueryClient} from "@tanstack/react-query";
 import { getNetworkConfig } from "@/lib/networkConfig";
@@ -31,9 +31,9 @@ const RainbowKitAndWagmiProvider = ({children} : {children: React.ReactNode }) =
               learnMoreUrl: learnMoreUrl
             }
           }
-          theme={darkTheme({
-            accentColor: '#03c0f9',
-            accentColorForeground: '#000f24',
+          theme={lightTheme({
+            accentColor: '#000f24',
+            accentColorForeground: '#03c0f9',
             borderRadius: 'large',
             fontStack: 'system',
             overlayBlur: 'small'
