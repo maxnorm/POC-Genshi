@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import RainbowKitAndWagmiProvider from "./RainbowKitAndWagmiProvider";
+import { Toaster } from "sonner";
+import Auth from "@/components/Auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,7 +31,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <RainbowKitAndWagmiProvider>
+          {children}
+        </RainbowKitAndWagmiProvider>
+        <Toaster 
+          position="bottom-right" 
+          toastOptions={{
+            duration: 5000,
+            style: {
+              backgroundColor: "#262626",
+              color: '#fff',
+            },
+          }} />
       </body>
     </html>
   );

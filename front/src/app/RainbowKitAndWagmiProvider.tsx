@@ -22,8 +22,8 @@ const RainbowKitAndWagmiProvider = ({children} : {children: React.ReactNode }) =
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider theme={darkTheme({
-            accentColor: '#00FFFF',
-            accentColorForeground: 'black',
+            accentColor: '#03c0f9',
+            accentColorForeground: '#000f24',
             borderRadius: 'large',
             fontStack: 'system',
             overlayBlur: 'small',
