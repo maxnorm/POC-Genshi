@@ -17,17 +17,17 @@ function AuthPage() {
       height={200}
       className="w-48 h-48" 
     />
-    <h1 className="text-2xl font-bold pb-6">Authentication Required</h1>
+    <h1 className="text-2xl font-bold pb-6">Authentification requise</h1>
     <div className="flex flex-col items-center justify-center gap-6">
-      <p className="text-sm sm:text-md max-w-sm sm:max-w-fit text-center">Connect your wallet to access the dashboard.</p>
-      <ConnectButton />
+      <p className="text-sm sm:text-md max-w-sm sm:max-w-fit text-center">Connectez votre wallet pour accéder au tableau de bord.</p>
+      <ConnectButton label="Se connecter"/>
       <Link href="/" className="text-sm sm:text-md text-genshi-blue-secondary">
-        Back to home
+        Retour à l'accueil
       </Link>
       <span className="pt-16 text-md sm:text-lg">
-        Need help?{" "}
+        Besoin d'aide?{" "}
         <a href="mailto:support@genshi.xyz" className="hover:underline">
-          Contact us
+          Contactez-nous
         </a>
       </span>
     </div>

@@ -35,9 +35,9 @@ import CustomConnectButton from "../CustomConnectButton";
 function DashboardLayout({ children }: { children: React.ReactNode }) {
 
   const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: Home },
-    { name: 'Inventory', href: '/dashboard/inventory', icon: Package },
-    { name: 'Templates', href: '/dashboard/templates', icon: FileText }
+    { name: 'Tableau de bord', href: '/dashboard', icon: Home },
+    { name: 'Inventaire', href: '/dashboard/inventory', icon: Package },
+    { name: 'Modèles', href: '/dashboard/templates', icon: FileText }
   ];
 
   return (

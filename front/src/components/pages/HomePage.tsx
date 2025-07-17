@@ -20,24 +20,24 @@ function HomePage() {
       height={200}
       className="w-48 h-48" 
     />
-    <h1 className="text-2xl font-bold pb-6">Welcome to GENSHI</h1>
+    <h1 className="text-2xl font-bold pb-6">Bienvenue sur GENSHI</h1>
     <div className="flex flex-col items-center justify-center gap-6">
       <p className="text-sm sm:text-md max-w-sm sm:max-w-fit text-center">
-        Traceability platform for critical industrial assets using blockchain and NFTs
+        Plateforme de suivi pour les actifs industriels critiques utilisant la blockchain
       </p>
       {isConnected ? (
         <Button asChild variant="genshi-light">
           <Link href="/dashboard">
-            Go to Dashboard
+            Accéder au tableau de bord
           </Link>
         </Button>
       ) : (
-        <ConnectButton />
+        <ConnectButton label="Se connecter"/>
       )}
       <span className="pt-16 text-md sm:text-lg flex flex-col items-center justify-center">
-        Questions about GENSHI?{" "}
+        Questions sur GENSHI?{" "}
         <a href="mailto:support@genshi.xyz" className="hover:underline">
-          Contact our team
+          Contactez notre équipe
         </a>
       </span>
     </div>

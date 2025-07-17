@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 function Inventory() {
   return (
     <div className="space-y-6">
-      <PageHeader title="Inventory" description="Manage your inventory." />
+      <PageHeader title="Inventaire" description="Gérez votre inventaire de NFT." />
     </div>
   );
 }

@@ -17,16 +17,26 @@ const config = getDefaultConfig({
 
 const queryClient = new QueryClient();
 
+const learnMoreUrl = process.env.NEXT_PUBLIC_LEARN_MORE_URL!;
+
 const RainbowKitAndWagmiProvider = ({children} : {children: React.ReactNode }) => {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider theme={darkTheme({
+        <RainbowKitProvider 
+          locale='fr'
+          appInfo={
+            {
+              appName: 'GENSHI',
+              learnMoreUrl: learnMoreUrl
+            }
+          }
+          theme={darkTheme({
             accentColor: '#03c0f9',
             accentColorForeground: '#000f24',
             borderRadius: 'large',
             fontStack: 'system',
-            overlayBlur: 'small',
+            overlayBlur: 'small'
         })}>
           {children}
         </RainbowKitProvider>

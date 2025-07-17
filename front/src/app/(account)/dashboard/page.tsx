@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 function Dashboard() {
   return (
     <div className="space-y-6">
-      <PageHeader title="Dashboard" description="Welcome to your GENSHI traceability dashboard." />
+      <PageHeader title="Tableau de bord" description="Bienvenue sur votre tableau de bord GENSHI." />
       <DashboardStats />
       
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
