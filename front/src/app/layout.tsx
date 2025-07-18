@@ -33,7 +33,7 @@ export default function RootLayout({
       >
         <RainbowKitAndWagmiProvider>
           {children}
-          <NetworkDebug />
+          {process.env.NEXT_PUBLIC_DEBUG_MODE === "1" && <NetworkDebug />}
         </RainbowKitAndWagmiProvider>
         <Toaster 
           position="bottom-right" 
