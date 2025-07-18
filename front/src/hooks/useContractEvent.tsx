@@ -21,10 +21,9 @@ function useContractEvent<T = any>(
 ) {
   const { address } = useAccount();
   const [events, setEvents] = useState<T[]>([]);
-  const { fromBlocks, contractsAddresses } = getNetworkConfig()
+  const { fromBlock, contractsAddresses } = getNetworkConfig()
 
   const contractAddress = contractsAddresses?.[contract]
-  const fromBlock = fromBlocks?.[contract]
 
   /**
    * Get the events from the contract and set the events state

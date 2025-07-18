@@ -13,9 +13,7 @@ interface NetworkConfig {
   wagmiChain: WagmiChain;
   defaultChain: Chain;
   rpcUrl?: string;
-  fromBlocks?: {
-    [key in Contracts]: bigint;
-  };
+  fromBlock?: bigint;
   contractsAddresses?: {
     [key in Contracts]: `0x${string}`;
   };
@@ -37,13 +35,7 @@ const networks: Record<string, NetworkConfig> = {
     wagmiChain: hardhatWagmi,
     defaultChain: hardhatViem,
     rpcUrl: 'http://127.0.0.1:8545',
-    fromBlocks: {
-      [Contracts.AccessManager]: BigInt(0),
-      [Contracts.TemplateRegistry]: BigInt(0),
-      [Contracts.PieceNFT]: BigInt(0),
-      [Contracts.AssemblyNFT]: BigInt(0),
-      [Contracts.EquipmentNFT]: BigInt(0),
-    },
+    fromBlock: BigInt(0),
     contractsAddresses: {
       [Contracts.AccessManager]: process.env.NEXT_PUBLIC_HARDHAT_ACCESS_MANAGER_ADDRESS as `0x${string}`,
       [Contracts.TemplateRegistry]: process.env.NEXT_PUBLIC_HARDHAT_TEMPLATE_REGISTRY_ADDRESS as `0x${string}`,
@@ -57,18 +49,8 @@ const networks: Record<string, NetworkConfig> = {
     wagmiChain: sepoliaWagmi,
     defaultChain: sepoliaViem,
     rpcUrl: process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL,
-    fromBlocks: {
-      [Contracts.AccessManager]: process.env.NEXT_PUBLIC_SEPOLIA_ACCESS_MANAGER_BLOCKNUMBER_DEPLOYED ? 
-        BigInt(process.env.NEXT_PUBLIC_SEPOLIA_ACCESS_MANAGER_BLOCKNUMBER_DEPLOYED) : BigInt(0),
-      [Contracts.TemplateRegistry]: process.env.NEXT_PUBLIC_SEPOLIA_TEMPLATE_REGISTRY_BLOCKNUMBER_DEPLOYED ? 
-        BigInt(process.env.NEXT_PUBLIC_SEPOLIA_TEMPLATE_REGISTRY_BLOCKNUMBER_DEPLOYED) : BigInt(0),
-      [Contracts.PieceNFT]: process.env.NEXT_PUBLIC_SEPOLIA_PIECE_NFT_BLOCKNUMBER_DEPLOYED ? 
-        BigInt(process.env.NEXT_PUBLIC_SEPOLIA_PIECE_NFT_BLOCKNUMBER_DEPLOYED) : BigInt(0),
-      [Contracts.AssemblyNFT]: process.env.NEXT_PUBLIC_SEPOLIA_ASSEMBLY_NFT_BLOCKNUMBER_DEPLOYED ? 
-        BigInt(process.env.NEXT_PUBLIC_SEPOLIA_ASSEMBLY_NFT_BLOCKNUMBER_DEPLOYED) : BigInt(0),
-      [Contracts.EquipmentNFT]: process.env.NEXT_PUBLIC_SEPOLIA_EQUIPMENT_NFT_BLOCKNUMBER_DEPLOYED ? 
-        BigInt(process.env.NEXT_PUBLIC_SEPOLIA_EQUIPMENT_NFT_BLOCKNUMBER_DEPLOYED) : BigInt(0),
-    },
+    fromBlock: process.env.NEXT_PUBLIC_SEPOLIA_ACCESS_MANAGER_BLOCKNUMBER_DEPLOYED ? 
+      BigInt(process.env.NEXT_PUBLIC_SEPOLIA_ACCESS_MANAGER_BLOCKNUMBER_DEPLOYED) : BigInt(0),
     contractsAddresses: {
       [Contracts.AccessManager]: process.env.NEXT_PUBLIC_SEPOLIA_ACCESS_MANAGER_ADDRESS as `0x${string}`,
       [Contracts.TemplateRegistry]: process.env.NEXT_PUBLIC_SEPOLIA_TEMPLATE_REGISTRY_ADDRESS as `0x${string}`,
@@ -82,18 +64,8 @@ const networks: Record<string, NetworkConfig> = {
     wagmiChain: holeskyWagmi,
     defaultChain: holeskyViem,
     rpcUrl: process.env.NEXT_PUBLIC_HOLESKY_RPC_URL,
-    fromBlocks: {
-      [Contracts.AccessManager]: process.env.NEXT_PUBLIC_HOLESKY_ACCESS_MANAGER_BLOCKNUMBER_DEPLOYED ?
-         BigInt(process.env.NEXT_PUBLIC_HOLESKY_ACCESS_MANAGER_BLOCKNUMBER_DEPLOYED) : BigInt(0),
-      [Contracts.TemplateRegistry]: process.env.NEXT_PUBLIC_HOLESKY_TEMPLATE_REGISTRY_BLOCKNUMBER_DEPLOYED ? 
-        BigInt(process.env.NEXT_PUBLIC_HOLESKY_TEMPLATE_REGISTRY_BLOCKNUMBER_DEPLOYED) : BigInt(0),
-      [Contracts.PieceNFT]: process.env.NEXT_PUBLIC_HOLESKY_PIECE_NFT_BLOCKNUMBER_DEPLOYED ? 
-        BigInt(process.env.NEXT_PUBLIC_HOLESKY_PIECE_NFT_BLOCKNUMBER_DEPLOYED) : BigInt(0),
-      [Contracts.AssemblyNFT]: process.env.NEXT_PUBLIC_HOLESKY_ASSEMBLY_NFT_BLOCKNUMBER_DEPLOYED ? 
-        BigInt(process.env.NEXT_PUBLIC_HOLESKY_ASSEMBLY_NFT_BLOCKNUMBER_DEPLOYED) : BigInt(0),
-      [Contracts.EquipmentNFT]: process.env.NEXT_PUBLIC_HOLESKY_EQUIPMENT_NFT_BLOCKNUMBER_DEPLOYED ? 
-        BigInt(process.env.NEXT_PUBLIC_HOLESKY_EQUIPMENT_NFT_BLOCKNUMBER_DEPLOYED) : BigInt(0),
-    },
+    fromBlock: process.env.NEXT_PUBLIC_HOLESKY_ACCESS_MANAGER_BLOCKNUMBER_DEPLOYED ?
+      BigInt(process.env.NEXT_PUBLIC_HOLESKY_ACCESS_MANAGER_BLOCKNUMBER_DEPLOYED) : BigInt(0),
     contractsAddresses: {
       [Contracts.AccessManager]: process.env.NEXT_PUBLIC_HOLESKY_ACCESS_MANAGER_ADDRESS as `0x${string}`,
       [Contracts.TemplateRegistry]: process.env.NEXT_PUBLIC_HOLESKY_TEMPLATE_REGISTRY_ADDRESS as `0x${string}`,
