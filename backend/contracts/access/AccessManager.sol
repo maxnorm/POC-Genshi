@@ -3,12 +3,13 @@ pragma solidity 0.8.28;
 
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 
-import {Access_InvalidRoleCombination} from "./AccessErrors.sol";
+import {Access_InvalidRoleCombination, Access_DefaultAdminCannotBeGranted} from "./AccessErrors.sol";
 
 /// @title AccessManager
 /// @author Maxime Normandin <m.normandin@tranqilo.ca>
 /// @notice This contract is used to manage the access in the system
 contract AccessManager is AccessControl {
+  bytes32 public constant BASIC_ADMIN = keccak256("BASIC_ADMIN");
   bytes32 public constant PIECE_MANAGER = keccak256("PIECE_MANAGER");
   bytes32 public constant PIECE_MINTER = keccak256("PIECE_MINTER");
   bytes32 public constant PIECE_AUDITOR = keccak256("PIECE_AUDITOR");
@@ -33,6 +34,7 @@ contract AccessManager is AccessControl {
 
   constructor() {
     _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    _grantRole(BASIC_ADMIN, msg.sender);
     _grantRole(TEMPLATE_MANAGER, msg.sender);
 
     _setRoleAdmin(PIECE_MANAGER, DEFAULT_ADMIN_ROLE);
@@ -61,6 +63,7 @@ contract AccessManager is AccessControl {
   /// @dev This function is used to grant a role to an account
   /// @dev This function is also used to check if a role combination is valid
   function grantRole(bytes32 role, address account) public override {
+    require(role != DEFAULT_ADMIN_ROLE, Access_DefaultAdminCannotBeGranted());
     _checkRoleCombination(role, account);
     super.grantRole(role, account);
   }
@@ -70,6 +73,11 @@ contract AccessManager is AccessControl {
   /// @param account The account to check
   /// @dev This function is used to prevent wrong role combinations
   function _checkRoleCombination(bytes32 role, address account) internal view {
+    // Bypass to allow admin to have any role combination
+    if (super.hasRole(DEFAULT_ADMIN_ROLE, account)) {
+      return;
+    }
+
     if (role == PIECE_AUDITOR ) {
         require(!hasRole(PIECE_MINTER, account), Access_InvalidRoleCombination(account, role));
     }
