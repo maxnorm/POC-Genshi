@@ -1,0 +1,84 @@
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAdmin } from "@/contexts/useAdmin";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
+import { ROLES, ROLES_LABELS } from "@/lib/constants/roles";
+import { User } from "@/lib/types/User";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+
+function RolesManagement() {
+  const { allUsers, isLoadingUser } = useAdmin();
+  const roleKeys = Object.keys(ROLES);
+
+  return (
+    <Card className="col-span-4">
+      <CardHeader>
+        <CardTitle>Gestion des rôles</CardTitle>
+        <CardDescription>
+          Gérez les utilisateurs et leurs permissions
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Adresse</TableHead>
+              <TableHead>Rôles</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoadingUser ? (
+              Array.from({ length: 5 }).map((_, index) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    <Skeleton className="h-4 w-32" />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-wrap gap-2">
+                      <Skeleton className="h-6 w-20" />
+                      <Skeleton className="h-6 w-24" />
+                      <Skeleton className="h-6 w-16" />
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-8 w-16" />
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : allUsers.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={3}>Aucun utilisateur trouvé</TableCell>
+              </TableRow>
+            ) : (
+              allUsers.map((user: User) => (
+                <TableRow key={user.address}>
+                  <TableCell>{user.address}</TableCell>
+                  <TableCell>
+                    <div className="flex flex-wrap gap-2">
+                      {roleKeys.filter((role) => user.roles[role]).map((role) => (
+                        <span
+                          key={role}
+                          className="inline-block bg-genshi-blue-secondary text-white text-xs font-semibold px-2 py-1 rounded-full"
+                        >
+                          {ROLES_LABELS[role as keyof typeof ROLES_LABELS]}
+                        </span>
+                      ))}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Button size="sm" variant="default" onClick={() => { /* TODO: open grant modal */ }}>
+                      Modifier les rôles
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
+  );
+}
+
+export default RolesManagement;

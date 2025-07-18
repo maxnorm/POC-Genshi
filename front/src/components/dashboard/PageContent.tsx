@@ -13,7 +13,7 @@ function PageContent({ children }: { children: React.ReactNode }) {
     )}>
       <div className={cn(
         "w-full",
-        isCollapsed && "flex justify-center"
+        isCollapsed && "flex justify-center w-full"
       )}>
         {children}
       </div>

@@ -2,6 +2,7 @@ import { keccak256, toBytes } from "viem";
 
 export const ROLES = {
   DEFAULT_ADMIN_ROLE: "0x0000000000000000000000000000000000000000000000000000000000000000",
+  BASIC_ADMIN: keccak256(toBytes("BASIC_ADMIN")),
   PIECE_MANAGER: keccak256(toBytes("PIECE_MANAGER")),
   PIECE_MINTER: keccak256(toBytes("PIECE_MINTER")),
   PIECE_AUDITOR: keccak256(toBytes("PIECE_AUDITOR")),
@@ -22,3 +23,25 @@ export const ROLES = {
 } as const;
 
 export type RoleKey = keyof typeof ROLES;
+
+export const ROLES_LABELS = {
+  DEFAULT_ADMIN_ROLE: "Super administrateur",
+  BASIC_ADMIN: "Administrateur",
+  PIECE_MANAGER: "Gestionnaire de pièce",
+  PIECE_MINTER: "Créateur de pièce",
+  PIECE_AUDITOR: "Auditeur de pièce",
+  PIECE_VALIDATOR: "Validateur de pièce",
+  PIECE_DOCUMENT_MANAGER: "Gestionnaire de document de pièce",
+  ASSEMBLY_MANAGER: "Gestionnaire d'assemblée",
+  ASSEMBLY_MINTER: "Créateur d'assemblée",
+  ASSEMBLY_AUDITOR: "Auditeur d'assemblée",
+  ASSEMBLY_VALIDATOR: "Validateur d'assemblée",
+  ASSEMBLY_DOCUMENT_MANAGER: "Gestionnaire de document d'assemblée",
+  EQUIPMENT_MANAGER: "Gestionnaire d'équipement",
+  EQUIPMENT_MINTER: "Créateur d'équipement",
+  EQUIPMENT_AUDITOR: "Auditeur d'équipement",
+  EQUIPMENT_VALIDATOR: "Validateur d'équipement",
+  EQUIPMENT_DOCUMENT_MANAGER: "Gestionnaire de document d'équipement",
+  TEMPLATE_MANAGER: "Gestionnaire de modèle",
+  REGULATOR: "Régulateur",
+} as const;

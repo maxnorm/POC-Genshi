@@ -3,7 +3,7 @@ import { useAccount, usePublicClient } from "wagmi";
 import { accessManagerABI, accessManagerAddress } from "@/lib/constants/contracts/accessManager";
 import { ROLES } from "@/lib/constants/roles";
 
-function useUserRoles() {
+function useCurrentUserRoles() {
   const { address } = useAccount();
   const publicClient = usePublicClient();
 
@@ -73,4 +73,4 @@ function useUserRoles() {
   };
 }
 
-export default useUserRoles;
+export default useCurrentUserRoles;

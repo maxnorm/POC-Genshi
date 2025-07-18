@@ -1,9 +1,5 @@
 'use client';
 
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useAccount } from 'wagmi';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import Link from 'next/link';
 import { 
   Home, 
@@ -22,7 +18,6 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
-  SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -68,7 +63,7 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
       navigation.push({ name: 'Audit', href: '/dashboard/audit', icon: Shield });
     }
 
-    if (hasRole('DEFAULT_ADMIN_ROLE')) {
+    if (hasRole("DEFAULT_ADMIN_ROLE")) {
       navigation.push({ name: 'Administration', href: '/dashboard/admin', icon: Settings });
     }
 
@@ -76,8 +71,8 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen">
+    <SidebarProvider className="w-full">
+      <div className="flex min-h-screen w-full pr-8">
         <Sidebar className="border-r border-genshi-blue-secondary/20">
           <SidebarHeader className="flex flex-col">
             <div className="flex items-center gap-2 px-2 rounded-xl p-1 bg-genshi-blue-secondary rounded-xl">

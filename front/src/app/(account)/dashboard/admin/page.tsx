@@ -1,6 +1,6 @@
 import Access from "@/components/Access";
-import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Metadata } from "next";
+import AdminPage from "@/components/pages/dashboard/AdminPage";
 
 export const metadata: Metadata = {
   title: "Admin – GENSHI",
@@ -13,9 +13,7 @@ export const metadata: Metadata = {
 function Admin() {
   return (
     <Access requiredRoles={['DEFAULT_ADMIN_ROLE']}>
-      <div className="space-y-6">
-        <PageHeader title="Administration" description="Gérez la plateforme GENSHI" />
-      </div>
+      <AdminPage />
     </Access>
   );
 }

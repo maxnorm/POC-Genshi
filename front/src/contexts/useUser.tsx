@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { useAccount } from "wagmi";
-import useUserRoles from "@/hooks/useUserRoles";
+import useCurrentUserRoles from "@/hooks/useCurrentUserRoles";
 
 
 const UserContext = createContext<any>(null);
@@ -15,7 +15,7 @@ const UserContext = createContext<any>(null);
  */
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const { address } = useAccount();
-  const { userRoles, hasAnyRole, hasRole, hasAnyOfRoles, hasAllOfRoles } = useUserRoles();
+  const { userRoles, hasAnyRole, hasRole, hasAnyOfRoles, hasAllOfRoles } = useCurrentUserRoles();
 
   const exposed = {
     address,

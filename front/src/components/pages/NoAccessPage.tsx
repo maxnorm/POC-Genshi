@@ -1,17 +1,19 @@
 'use client';
 
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import Link from "next/link";
-import useRedirectWhenConnected from "@/hooks/useRedirectWhenConnected";
 import { Button } from "@/components/ui/button";
+import CustomConnectButton from "@/components/CustomConnectButton";
 
 /**
  * No access page
  * This is the page to display when the user has no access to the page
  * @returns {Object} The NoAccessPage component
  */
-function NoAccessPage() {
+function NoAccessPage(
+    {link="/dashboard", buttonMsg="Accéder au tableau de bord", hasNoRole=false}: 
+    {link?: string, buttonMsg?: string, hasNoRole?: boolean})  
+{
   return (
     <div className="flex flex-col items-center justify-center h-screen">
     <Image
@@ -23,12 +25,29 @@ function NoAccessPage() {
     />
     <h1 className="text-2xl font-bold pb-6">{"Accès refusé"}</h1>
     <div className="flex flex-col items-center justify-center gap-6">
-      <p className="text-sm sm:text-md max-w-sm sm:max-w-fit text-center">{"Vous n'avez pas les permissions nécessaires pour accéder à cette page."}</p>
-      <Button asChild variant="genshi">
-        <Link href="/dashboard">
-          {"Accéder au tableau de bord"}
-        </Link>
-      </Button>
+      <p className="text-sm sm:text-md max-w-sm sm:max-w-fit text-center">
+        {hasNoRole ?
+          "Vous n'avez pas les permissions."
+          : "Vous n'avez pas les permissions nécessaires pour accéder à cette page."
+        }
+      </p>
+      {hasNoRole && (
+        <p className="text-sm sm:text-md max-w-sm sm:max-w-fit text-center">
+          Connectez-vous avec un autre compte pour accéder à cette page.
+        </p>
+      )}
+      { hasNoRole ? (
+        <>
+          <CustomConnectButton/>
+        </>
+      ) : (
+        <Button asChild variant="genshi">
+          <Link href={link}>
+            {buttonMsg}
+          </Link>
+        </Button>
+        )
+      }
       <span className="pt-16 text-md sm:text-lg flex flex-col items-center justify-center">
         <span className="font-semibold">{"Besoin d'aide?"}</span>
         <a href="mailto:support@genshi.xyz" className="hover:underline">
