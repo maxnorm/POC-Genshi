@@ -47,14 +47,14 @@ function AddUserDialog() {
       <DialogTrigger asChild>
         <Button variant="genshiSimple" onClick={() => setOpen(true)}>
           <Plus className="w-4 h-4" />
-          Ajouter un utilisateur
+          {"Ajouter un utilisateur"}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] max-h-[400px]">
         <DialogHeader>
-          <DialogTitle>Ajouter un utilisateur</DialogTitle>
+          <DialogTitle>{"Ajouter un utilisateur"}</DialogTitle>
           <DialogDescription className="text-black">
-            Entrez l'adresse de l'utilisateur que vous souhaitez ajouter
+            {"Entrez l'adresse de l'utilisateur que vous souhaitez ajouter"}
           </DialogDescription>
         </DialogHeader>
         <Input
