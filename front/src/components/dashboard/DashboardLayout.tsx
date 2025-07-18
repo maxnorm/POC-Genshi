@@ -75,7 +75,7 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
       <div className="flex min-h-screen w-full pr-8">
         <Sidebar className="border-r border-genshi-blue-secondary/20">
           <SidebarHeader className="flex flex-col">
-            <div className="flex items-center gap-2 px-2 rounded-xl p-1 bg-genshi-blue-secondary rounded-xl">
+            <div className="flex items-center gap-2 px-2 rounded-xl p-1 bg-genshi-blue-secondary rounded-xl border-2 border-genshi-blue">
               <Image src="/LOGO-GENSHI.png" alt="GENSHI" width={75} height={75} className="w-14 h-14"/>
               <div className="w-full flex justify-center">
                 <CustomConnectButton />
@@ -102,7 +102,7 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
             </SidebarGroup>
           </SidebarContent>
           <SidebarFooter>
-            <p className="text-sm text-genshi-blue bg-genshi-blue-secondary px- py-2 rounded-lg text-center font-semibold flex flex-col items-center justify-center">
+            <p className="text-sm text-genshi-blue bg-genshi-blue-secondary px- py-2 rounded-lg text-center font-semibold flex flex-col items-center justify-center border-2 border-genshi-blue">
               <span>GENSHI© {new Date().getFullYear()}</span>
               <span className="text-xs">Tous droits réservés</span>
             </p>

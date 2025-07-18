@@ -1,34 +1,7 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Package, FileText, Users, Shield } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Stats } from "@/lib/types/DashboardStats";
 
-const stats = [
-  {
-    title: "Total NFTs",
-    value: "1,234",
-    change: "+20.1% from last month",
-    icon: Package,
-  },
-  {
-    title: "Templates",
-    value: "56",
-    change: "+5 new this month",
-    icon: FileText,
-  },
-  {
-    title: "Active Users",
-    value: "89",
-    change: "+12% from last week",
-    icon: Users,
-  },
-  {
-    title: "Security Score",
-    value: "98%",
-    change: "Excellent security rating",
-    icon: Shield,
-  },
-];
-
-function DashboardStats() {
+function DashboardStats({stats}: {stats: Stats[]}) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat) => (

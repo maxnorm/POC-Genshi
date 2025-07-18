@@ -10,6 +10,8 @@ const roleRevokedEventABI = 'event RoleRevoked(bytes32 indexed role, address ind
 
 function useUsersFetch() {
   const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [roleGrantedCount, setRoleGrantedCount] = useState(0);
+  const [roleRevokedCount, setRoleRevokedCount] = useState(0);
   const [isLoadingUser, setIsLoadingUser] = useState(true);
 
   const { events: roleGrantedEvents, refetch: refetchRoleGrantedEvents } = useContractEvent(
@@ -38,6 +40,9 @@ function useUsersFetch() {
     setIsLoadingUser(true);
 
     try {
+      setRoleGrantedCount(roleGrantedEvents.length);
+      setRoleRevokedCount(roleRevokedEvents.length);
+
       const userRolesMap = new Map<string, User>();
 
       const getRoleName = (roleHash: string): string => {
@@ -94,6 +99,8 @@ function useUsersFetch() {
     isLoadingUser,
     refetchRoleGrantedEvents,
     refetchRoleRevokedEvents,
+    roleGrantedCount,
+    roleRevokedCount,
   };
 }
 

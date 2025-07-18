@@ -5,18 +5,22 @@ import { ROLES, ROLES_LABELS } from "@/lib/constants/roles";
 import { User } from "@/lib/types/User";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import AddUserDialog from "./AddUserDialog";
 
-function RolesManagement() {
+function UsersTable() {
   const { allUsers, isLoadingUser } = useAdmin();
   const roleKeys = Object.keys(ROLES);
 
   return (
     <Card className="col-span-4">
-      <CardHeader>
-        <CardTitle>Gestion des rôles</CardTitle>
-        <CardDescription>
-          Gérez les utilisateurs et leurs permissions
-        </CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <div className="flex flex-col gap-2">
+          <CardTitle>Gestion des rôles</CardTitle>
+          <CardDescription>
+            Gérez les utilisateurs et leurs permissions
+          </CardDescription>
+        </div>
+        <AddUserDialog />
       </CardHeader>
       <CardContent>
         <Table>
@@ -59,7 +63,7 @@ function RolesManagement() {
                       {roleKeys.filter((role) => user.roles[role]).map((role) => (
                         <span
                           key={role}
-                          className="inline-block bg-genshi-blue-secondary text-white text-xs font-semibold px-2 py-1 rounded-full"
+                          className="inline-block bg-genshi-blue-secondary/70 shadow-sm text-white text-xs font-semibold px-2 py-1 rounded-full"
                         >
                           {ROLES_LABELS[role as keyof typeof ROLES_LABELS]}
                         </span>
@@ -67,7 +71,7 @@ function RolesManagement() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Button size="sm" variant="default" onClick={() => { /* TODO: open grant modal */ }}>
+                    <Button size="sm" variant="genshiSimple" onClick={() => { /* TODO: open grant modal */ }}>
                       Modifier les rôles
                     </Button>
                   </TableCell>
@@ -81,4 +85,4 @@ function RolesManagement() {
   );
 }
 
-export default RolesManagement;
+export default UsersTable;

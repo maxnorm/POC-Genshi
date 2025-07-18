@@ -42,9 +42,9 @@ function useContractEvent<T = any>(
     ))
   }, [contractAddress, event, transform])  ;
 
-  const refetch = useCallback(() => {
-    getEvents();
-  }, [getEvents]);
+  const refetch = useCallback(async () => {
+    await getEvents();
+  }, [contractAddress, event, transform, fromBlock]);
 
   useEffect(() => { 
     const getAllEvents = async () => {

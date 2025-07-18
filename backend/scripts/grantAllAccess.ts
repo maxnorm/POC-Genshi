@@ -1,6 +1,5 @@
 
 import { ethers } from "hardhat";
-import { keccak256, toUtf8Bytes } from "ethers";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -18,7 +17,7 @@ async function main(): Promise<void> {
   const accessManager = await ethers.getContractAt("AccessManager", ACCESS_MANAGER_ADDRESS);
 
   console.log("Granting all access roles...");
-  console.warn("Warning: This will grant all roles to the deployer address. This is not recommended for production.");
+  console.warn("⚠️  Warning: This will grant all roles to the deployer address. This is not recommended for production. ⚠️");
 
   const roles = [
     "PIECE_MANAGER",
