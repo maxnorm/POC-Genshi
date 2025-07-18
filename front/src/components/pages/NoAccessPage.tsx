@@ -21,18 +21,18 @@ function NoAccessPage() {
       height={200}
       className="w-48 h-48" 
     />
-    <h1 className="text-2xl font-bold pb-6">Accès refusé</h1>
+    <h1 className="text-2xl font-bold pb-6">{"Accès refusé"}</h1>
     <div className="flex flex-col items-center justify-center gap-6">
-      <p className="text-sm sm:text-md max-w-sm sm:max-w-fit text-center">Vous n'avez pas les permissions nécessaires pour accéder à cette page.</p>
+      <p className="text-sm sm:text-md max-w-sm sm:max-w-fit text-center">{"Vous n'avez pas les permissions nécessaires pour accéder à cette page."}</p>
       <Button asChild variant="genshi">
         <Link href="/dashboard">
-          Accéder au tableau de bord
+          {"Accéder au tableau de bord"}
         </Link>
       </Button>
       <span className="pt-16 text-md sm:text-lg flex flex-col items-center justify-center">
         <span className="font-semibold">{"Besoin d'aide?"}</span>
         <a href="mailto:support@genshi.xyz" className="hover:underline">
-          Contactez nous
+          {"Contactez nous"}
         </a>
       </span>
     </div>

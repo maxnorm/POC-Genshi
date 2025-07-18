@@ -17,8 +17,6 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const { address } = useAccount();
   const { userRoles, hasAnyRole, hasRole, hasAnyOfRoles, hasAllOfRoles } = useUserRoles();
 
-  console.log("userRoles", userRoles);
-
   const exposed = {
     address,
     userRoles,

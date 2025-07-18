@@ -1,86 +1,76 @@
-import { useAccount, useReadContract } from "wagmi";
+import { useEffect, useState } from "react";
+import { useAccount, usePublicClient } from "wagmi";
 import { accessManagerABI, accessManagerAddress } from "@/lib/constants/contracts/accessManager";
 import { ROLES } from "@/lib/constants/roles";
 
-/**
- * Hook to get the user roles
- * @returns {Object}
- */
 function useUserRoles() {
   const { address } = useAccount();
+  const publicClient = usePublicClient();
 
-  /**
-   * Check if the user has a role
-   * @param role - The role to check
-   * @returns {Object} - The role data
-   */
-  function readRole(role: string) {
-    const { data, isLoading, error } = useReadContract({
-      address: accessManagerAddress,
-      abi: accessManagerABI,
-      functionName: 'hasRole',
-      args: [role, address]
-    });
-    return { data, isLoading, error };
-  }
+  const [userRoles, setUserRoles] = useState<Record<string, boolean>>({});
+  const [isLoadingRoles, setIsLoadingRoles] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-  /**
-   * Object to store the read contract calls for each role
-   * @type {Object}
-   */
-  const roleChecks = Object.fromEntries(
-    Object.entries(ROLES).map(([key, value]) => [
-      key, readRole(value)
-    ])
-  );
+  useEffect(() => {
+    async function fetchRoles() {
+      if (!address || !publicClient) {
+        setUserRoles({});
+        setIsLoadingRoles(false);
+        setError(null);
+        return;
+      }
 
-  /**
-   * Check if the user roles are loaded
-   * @returns {boolean}
-   */
-  const isLoadingRoles = Object.values(roleChecks).some(check => check.isLoading);
+      setIsLoadingRoles(true);
+      setError(null);
 
-  /**
-   * Object to store the user roles
-   * @type {Object}
-   */
-  const userRoles = Object.fromEntries(
-    Object.entries(roleChecks).map(([key, check]) => [
-      key,
-      check.data || false
-    ])
-  );
+      const roleEntries = Object.entries(ROLES);
+      const calls = roleEntries.map(([_, roleValue]) => ({
+        address: accessManagerAddress,
+        abi: accessManagerABI,
+        functionName: "hasRole" as const,
+        args: [roleValue, address],
+      }));
 
-  /**
-   * Check if the user has any role
-   * @returns {boolean}
-   */
-  const hasAnyRole = () => Object.values(userRoles).some(role => role);
+      try {
+        const results = await Promise.all(
+          calls.map(call => publicClient.readContract(call))
+        );
 
-  /**
-   * Check if the user has a specific role
-   * @param role - The role to check
-   * @returns {boolean}
-   */
-  const hasRole = (role: keyof typeof ROLES) => userRoles[role];
+        const newRoles = Object.fromEntries(
+          roleEntries.map(([key], idx) => [key, Boolean(results[idx])])
+        );
 
-  /**
-   * Check if the user has any of the given roles
-   * @param roles - The roles to check
-   * @returns {boolean}
-   */
-  const hasAnyOfRoles = (roles: (keyof typeof ROLES)[]) => 
+        setUserRoles(newRoles);
+      } catch (err) {
+        console.error("Failed to fetch roles", err);
+        setError(err instanceof Error ? err : new Error("Failed to fetch roles"));
+      } finally {
+        setIsLoadingRoles(false);
+      }
+    }
+
+    fetchRoles();
+  }, [address]);
+
+  const hasAnyRole = () => Object.values(userRoles).some(Boolean);
+
+  const hasRole = (role: keyof typeof ROLES) => userRoles[role] || false;
+
+  const hasAnyOfRoles = (roles: (keyof typeof ROLES)[]) =>
     roles.some(role => userRoles[role]);
 
-  /**
-   * Check if the user has all of the given roles
-   * @param roles - The roles to check
-   * @returns {boolean}
-   */
-  const hasAllOfRoles = (roles: (keyof typeof ROLES)[]) => 
+  const hasAllOfRoles = (roles: (keyof typeof ROLES)[]) =>
     roles.every(role => userRoles[role]);
 
-  return { isLoadingRoles, userRoles, hasAnyRole, hasRole, hasAnyOfRoles, hasAllOfRoles };
+  return { 
+    isLoadingRoles, 
+    userRoles, 
+    error,
+    hasAnyRole, 
+    hasRole, 
+    hasAnyOfRoles, 
+    hasAllOfRoles 
+  };
 }
 
 export default useUserRoles;
