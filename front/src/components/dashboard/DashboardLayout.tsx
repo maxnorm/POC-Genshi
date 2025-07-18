@@ -31,14 +31,49 @@ import {
 import Image from "next/image";
 import DashboardInset from "./DashboardInset";
 import CustomConnectButton from "../CustomConnectButton";
+import { useUser } from "@/contexts/useUser";
 
 function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const { hasRole, hasAnyOfRoles } = useUser();
 
   const navigation = [
     { name: 'Tableau de bord', href: '/dashboard', icon: Home },
     { name: 'Inventaire', href: '/dashboard/inventory', icon: Package },
-    { name: 'Modèles', href: '/dashboard/templates', icon: FileText }
+    { name: 'Modèles', href: '/dashboard/templates', icon: FileText },
+    
   ];
+
+  function buildNavigation() {
+    const navigation = [
+      { name: 'Tableau de bord', href: '/dashboard', icon: Home },
+    ]
+
+    if (hasAnyOfRoles(
+      [
+        'PIECE_MANAGER', 'PIECE_MINTER', 'PIECE_AUDITOR', 'PIECE_VALIDATOR', 'PIECE_DOCUMENT_MANAGER',
+        'ASSEMBLY_MANAGER', 'ASSEMBLY_MINTER', 'ASSEMBLY_AUDITOR', 'ASSEMBLY_VALIDATOR', 'ASSEMBLY_DOCUMENT_MANAGER',
+        'EQUIPMENT_MANAGER', 'EQUIPMENT_MINTER', 'EQUIPMENT_AUDITOR', 'EQUIPMENT_VALIDATOR', 'EQUIPMENT_DOCUMENT_MANAGER',
+      ])) {
+      navigation.push({ name: 'Inventaire', href: '/dashboard/inventory', icon: Package });
+    }
+
+    if (hasRole('TEMPLATE_MANAGER')) {
+      navigation.push({ name: 'Modèles', href: '/dashboard/templates', icon: FileText });
+    }
+
+    if (hasAnyOfRoles(
+      [
+        'PIECE_AUDITOR', 'ASSEMBLY_AUDITOR', 'EQUIPMENT_AUDITOR',
+      ])) {
+      navigation.push({ name: 'Audit', href: '/dashboard/audit', icon: Shield });
+    }
+
+    if (hasRole('DEFAULT_ADMIN_ROLE')) {
+      navigation.push({ name: 'Administration', href: '/dashboard/admin', icon: Settings });
+    }
+
+    return navigation;
+  }
 
   return (
     <SidebarProvider>
@@ -57,7 +92,7 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
               <SidebarGroupLabel className="text-genshi-blue-secondary text-md">Navigation</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {navigation.map((item) => (
+                  {buildNavigation().map((item) => (
                     <SidebarMenuItem key={item.name} className="border-b border-genshi-blue-secondary/20 hover:border-b-0">
                       <SidebarMenuButton asChild >
                         <Link href={item.href}>

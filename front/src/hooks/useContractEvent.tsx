@@ -5,7 +5,7 @@ import { publicClient } from "../lib/client";
 import { parseAbiItem, Log } from "viem";
 import { useAccount } from "wagmi";
 import { getNetworkConfig } from "../lib/networkConfig";
-import { Contracts } from "../lib/contracts";
+import { Contracts } from "../lib/enums/contracts";
 
 /**
  * Use a contract event

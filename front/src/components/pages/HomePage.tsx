@@ -7,6 +7,11 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link";
 import useRedirectWhenConnected from "@/hooks/useRedirectWhenConnected";
 
+/**
+ * Home page
+ * This is the home page of the application
+ * @returns {Object} The HomePage component
+ */
 function HomePage() {
   const { isConnected } = useAccount();
   useRedirectWhenConnected('/dashboard');
@@ -26,7 +31,7 @@ function HomePage() {
         Plateforme de suivi pour les actifs industriels critiques utilisant la blockchain
       </p>
       {isConnected ? (
-        <Button asChild variant="genshi-light">
+        <Button asChild variant="genshi">
           <Link href="/dashboard">
             Accéder au tableau de bord
           </Link>

@@ -4,15 +4,14 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import Link from "next/link";
 import useRedirectWhenConnected from "@/hooks/useRedirectWhenConnected";
+import { Button } from "@/components/ui/button";
 
 /**
- * Auth page
- * This is the page to authenticate the user
- * @returns {Object} The AuthPage component
+ * No access page
+ * This is the page to display when the user has no access to the page
+ * @returns {Object} The NoAccessPage component
  */
-function AuthPage() {
-  useRedirectWhenConnected('/dashboard');
-
+function NoAccessPage() {
   return (
     <div className="flex flex-col items-center justify-center h-screen">
     <Image
@@ -22,13 +21,14 @@ function AuthPage() {
       height={200}
       className="w-48 h-48" 
     />
-    <h1 className="text-2xl font-bold pb-6">Authentification requise</h1>
+    <h1 className="text-2xl font-bold pb-6">Accès refusé</h1>
     <div className="flex flex-col items-center justify-center gap-6">
-      <p className="text-sm sm:text-md max-w-sm sm:max-w-fit text-center">Connectez votre wallet pour accéder au tableau de bord.</p>
-      <ConnectButton label="Se connecter"/>
-      <Link href="/" className="text-sm sm:text-md text-genshi-blue-secondary">
-        {"Retour à l'accueil"}
-      </Link>
+      <p className="text-sm sm:text-md max-w-sm sm:max-w-fit text-center">Vous n'avez pas les permissions nécessaires pour accéder à cette page.</p>
+      <Button asChild variant="genshi">
+        <Link href="/dashboard">
+          Accéder au tableau de bord
+        </Link>
+      </Button>
       <span className="pt-16 text-md sm:text-lg flex flex-col items-center justify-center">
         <span className="font-semibold">{"Besoin d'aide?"}</span>
         <a href="mailto:support@genshi.xyz" className="hover:underline">
@@ -40,4 +40,4 @@ function AuthPage() {
   );
 }
 
-export default AuthPage;
+export default NoAccessPage;

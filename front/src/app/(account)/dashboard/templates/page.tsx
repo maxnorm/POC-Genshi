@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 function Templates() {
   return (
     <div className="space-y-6">
-      <PageHeader title="Modèles" description="Gérez vos modèles NFT." />
+      <PageHeader title="Modèles" description="Gérez vos modèles de données" />
     </div>
   );
 }

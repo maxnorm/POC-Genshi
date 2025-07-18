@@ -2,8 +2,12 @@ import { hardhat as hardhatViem, sepolia as sepoliaViem, holesky as holeskyViem 
 import { hardhat as hardhatWagmi, sepolia as sepoliaWagmi, holesky as holeskyWagmi } from 'wagmi/chains';
 import { Chain } from 'viem/chains';
 import type { Chain as WagmiChain } from 'wagmi/chains';
-import { Contracts } from './contracts';
+import { Contracts } from './enums/contracts';
 
+/**
+ * Network configuration interface
+ * @interface NetworkConfig
+ */
 interface NetworkConfig {
   network: string;
   wagmiChain: WagmiChain;
@@ -17,8 +21,16 @@ interface NetworkConfig {
   };
 }
 
+/**
+ * Default network set in the .env file
+ * @type {string}
+ */
 const defaultNetwork = process.env.NEXT_PUBLIC_DEFAULT_NETWORK || 'hardhat';
 
+/**
+ * Networks configuration
+ * @type {Record<string, NetworkConfig>}
+ */
 const networks: Record<string, NetworkConfig> = {
   hardhat: {
     network: defaultNetwork,
@@ -92,6 +104,10 @@ const networks: Record<string, NetworkConfig> = {
   }
 };  
 
+/**
+ * Get the network configuration
+ * @returns {NetworkConfig}
+ */
 export const getNetworkConfig = (): NetworkConfig => {
   return networks[defaultNetwork];
 };
