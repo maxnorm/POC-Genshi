@@ -3,6 +3,10 @@ import { useAccount, usePublicClient } from "wagmi";
 import { accessManagerABI, accessManagerAddress } from "@/lib/constants/contracts/accessManager";
 import { ROLES } from "@/lib/constants/roles";
 
+/**
+ * Hook to manage the current user roles
+ * @returns {Object} The current user roles and the loading state
+ */
 function useCurrentUserRoles() {
   const { address } = useAccount();
   const publicClient = usePublicClient();

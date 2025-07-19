@@ -4,12 +4,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useTemplate } from "@/contexts/useTemplate";
 
-export interface DocumentDefinition {
-  name: string;
-  allowedMimeTypes: string[];
-  required: boolean;
-}
-
 /**
  * Hook to add a document to a template
  * @returns {Object} The form state and the handle function

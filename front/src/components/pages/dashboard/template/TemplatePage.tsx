@@ -1,6 +1,6 @@
 'use client';
 
-import { PageHeader } from "@/components/dashboard/PageHeader";
+import PageHeader from "@/components/dashboard/PageHeader";
 import TemplateTable from "@/components/dashboard/template/TemplateTable";
 import DashboardStats from "@/components/dashboard/DashboardStats";
 import { FileText } from "lucide-react";

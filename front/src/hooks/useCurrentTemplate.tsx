@@ -4,6 +4,10 @@ import { useState } from "react";
 import { DocumentDefinition } from "@/lib/types/Document";
 import { AttributeDefinition } from "@/lib/types/Attribute";
 
+/**
+ * Hook to manage the current template
+ * @returns {Object} The current template and the setters for the attributes and documents
+ */
 function useCurrentTemplate() { 
   const [currentTemplate, setCurrentTemplate] = useState<any>(null);
 

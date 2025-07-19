@@ -1,5 +1,11 @@
 import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 
+/**
+ * Hook to write a contract function
+ * @param {string} contractAddress - The address of the contract
+ * @param {any} contractABI - The ABI of the contract
+ * @returns {Object} The hash, write function, isPending, isConfirming, isSuccess, error and errorConfirmation
+ */
 function useWrite( contractAddress: string, contractABI: any ) {
   const { data: hash, error, isPending, writeContract } = useWriteContract()
   const { isLoading: isConfirming, isSuccess, error: errorConfirmation } =

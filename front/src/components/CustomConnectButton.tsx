@@ -1,7 +1,6 @@
 'use client';
 
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { cn } from "@/lib/utils";
 
 /**
  * Custom connect button

@@ -1,4 +1,4 @@
-import { PageHeader } from "@/components/dashboard/PageHeader";
+import PageHeader from "@/components/dashboard/PageHeader";
 import DashboardStats from "@/components/dashboard/DashboardStats";
 import RecentActivity from "@/components/dashboard/RecentActivity";
 import QuickActions from "@/components/dashboard/QuickActions";

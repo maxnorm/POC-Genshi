@@ -6,8 +6,6 @@ import {
   Package, 
   FileText, 
   Settings,
-  BarChart3,
-  Users,
   Shield,
 } from 'lucide-react';
 import {
@@ -30,13 +28,6 @@ import { useUser } from "@/contexts/useUser";
 
 function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { hasRole, hasAnyOfRoles } = useUser();
-
-  const navigation = [
-    { name: 'Tableau de bord', href: '/dashboard', icon: Home },
-    { name: 'Inventaire', href: '/dashboard/inventory', icon: Package },
-    { name: 'Modèles', href: '/dashboard/templates', icon: FileText },
-    
-  ];
 
   function buildNavigation() {
     const navigation = [

@@ -1,10 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, X } from "lucide-react";
+import { X } from "lucide-react";
 import { NFTType } from "@/lib/enums/nftType";
 import { TemplateStatus, FilterOptions } from "@/hooks/useTemplateFilter";
-import { useState } from "react";
 
 interface TemplateFiltersProps {
   filters: FilterOptions;

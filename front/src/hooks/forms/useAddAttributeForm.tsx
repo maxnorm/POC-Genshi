@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { useTemplate } from "@/contexts/useTemplate";
-import { AttributeType, AttributeDefinition } from "@/lib/types/Attribute";
+import { AttributeType } from "@/lib/types/Attribute";
 
 /**
  * Hook to add an attribute to a template

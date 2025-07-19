@@ -4,7 +4,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Search, X } from "lucide-react";
 import { NFTType } from "@/lib/enums/nftType";
 import { TemplateStatus, FilterOptions } from "@/hooks/useTemplateFilter";
-import { useState } from "react";
 
 interface TemplateFiltersProps {
   filters: FilterOptions;

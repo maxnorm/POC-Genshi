@@ -1,6 +1,6 @@
 'use client';
 
-import { PageHeader } from "@/components/dashboard/PageHeader";
+import PageHeader from "@/components/dashboard/PageHeader";
 import UsersTable from "@/components/dashboard/admin/UsersTable";
 import { useSidebar } from "@/components/ui/sidebar";
 import DashboardStats from "@/components/dashboard/DashboardStats";

@@ -4,6 +4,10 @@ import { useState } from "react";
 import { useAdmin } from "@/contexts/useAdmin";
 import { toast } from "sonner";
 
+/**
+ * Hook to add a user to the contract
+ * @returns {Object} The form state and the handle function
+ */
 function useAddUserForm() { 
   const [newUserAddress, setNewUserAddress] = useState("");
   const [newUserRole, setNewUserRole] = useState("");

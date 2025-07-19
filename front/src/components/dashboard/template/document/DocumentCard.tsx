@@ -1,7 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { FileText } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Edit, Trash2 } from "lucide-react";
 import AddDocumentDialog from "./AddDocmentDialog";
 import { DocumentDefinition } from "@/lib/types/Document";
 import { COMMON_MIME_TYPES } from "@/lib/constants/commonMimeTypes";
