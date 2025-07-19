@@ -24,6 +24,7 @@ export default function NetworkDebug() {
         <div>Chain ID: {chainId}</div>
         <div>Connected Address: {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Not connected'}</div>
         <div>RPC URL: {networkConfig.rpcUrl ? 'Set' : 'Missing'}</div>
+        <div>From Block: {networkConfig.fromBlock}</div>
         <div>Access Manager: {networkConfig.contractsAddresses?.accessManager ? 'Set' : 'Missing'}</div>
         <div>Template Registry: {networkConfig.contractsAddresses?.templateRegistry ? 'Set' : 'Missing'}</div>
         <div>Piece NFT: {networkConfig.contractsAddresses?.pieceNFT ? 'Set' : 'Missing'}</div>
