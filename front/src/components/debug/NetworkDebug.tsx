@@ -25,11 +25,11 @@ export default function NetworkDebug() {
         <div>Connected Address: {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Not connected'}</div>
         <div>RPC URL: {networkConfig.rpcUrl ? 'Set' : 'Missing'}</div>
         <div>From Block: {networkConfig.fromBlock}</div>
-        <div>Access Manager: {networkConfig.contractsAddresses?.accessManager ? 'Set' : 'Missing'}</div>
-        <div>Template Registry: {networkConfig.contractsAddresses?.templateRegistry ? 'Set' : 'Missing'}</div>
-        <div>Piece NFT: {networkConfig.contractsAddresses?.pieceNFT ? 'Set' : 'Missing'}</div>
-        <div>Assembly NFT: {networkConfig.contractsAddresses?.assemblyNFT ? 'Set' : 'Missing'}</div>
-        <div>Equipment NFT: {networkConfig.contractsAddresses?.equipmentNFT ? 'Set' : 'Missing'}</div>
+        <div>Access Manager: {networkConfig.contractsAddresses?.accessManager ? networkConfig.contractsAddresses?.accessManager : 'Missing'}</div>
+        <div>Template Registry: {networkConfig.contractsAddresses?.templateRegistry ? networkConfig.contractsAddresses?.templateRegistry : 'Missing'}</div>
+        <div>Piece NFT: {networkConfig.contractsAddresses?.pieceNFT ? networkConfig.contractsAddresses?.pieceNFT : 'Missing'}</div>
+        <div>Assembly NFT: {networkConfig.contractsAddresses?.assemblyNFT ? networkConfig.contractsAddresses?.assemblyNFT : 'Missing'}</div>
+        <div>Equipment NFT: {networkConfig.contractsAddresses?.equipmentNFT ? networkConfig.contractsAddresses?.equipmentNFT : 'Missing'}</div>
       </div>
     </div>
   );

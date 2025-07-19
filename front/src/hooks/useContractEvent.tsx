@@ -29,7 +29,6 @@ function useContractEvent<T = any>(
    * Get the events from the contract and set the events state
    */
   const getEvents = useCallback(async () => { 
-    console.log("getEvents", contractAddress, event, fromBlock);
     const numberChangedLog = await publicClient.getLogs({
         address: contractAddress,
         event: parseAbiItem(event) as any,
