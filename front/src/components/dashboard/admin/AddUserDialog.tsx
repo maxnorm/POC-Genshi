@@ -47,7 +47,7 @@ function AddUserDialog() {
     <>
     <LoadingOverlay 
       isVisible={isSubmitting}
-      message="Ajout en cours..."
+      message="Ajout de l'utilisateur en cours..."
     />
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
@@ -93,10 +93,10 @@ function AddUserDialog() {
           <Button 
             type="submit" 
             onClick={() => handleSubmit()} 
-            disabled={newUserAddress.trim() === "" || newUserRole === "" || isSubmitting}
             className="w-full bg-genshi-blue-secondary text-white"
+            disabled={isSubmitting || newUserAddress.trim() === "" || newUserRole === ""}
           >
-            {isSubmitting ? "Transaction en cours..." : "Ajouter"}
+            {isSubmitting ? "Ajout en cours..." : "Ajouter"}
           </Button>
         </DialogFooter>
       </DialogContent>

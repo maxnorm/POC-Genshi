@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -9,6 +9,8 @@ interface LoadingOverlayProps {
   backdropClassName?: string;
   spinnerClassName?: string;
   messageClassName?: string;
+  dismissible?: boolean;
+  onDismiss?: () => void;
 }
 
 const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
@@ -18,24 +20,66 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
   backdropClassName,
   spinnerClassName,
   messageClassName,
+  dismissible = false,
+  onDismiss,
 }) => {
   if (!isVisible) return null;
 
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (dismissible && onDismiss) {
+      onDismiss();
+    }
+  };
+
+  const handleContentClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isVisible) {
+      document.body.style.overflow = 'hidden';
+      
+      if (overlayRef.current) {
+        overlayRef.current.focus();
+      }
+
+      return () => {
+        document.body.style.overflow = 'unset';
+      };
+    }
+  }, [isVisible]);
+
   return (
     <div
+      ref={overlayRef}
+      tabIndex={-1}
       className={cn(
         "fixed inset-0 z-[10000] flex items-center justify-center",
         "bg-black/50 backdrop-blur-sm",
+        "pointer-events-auto",
         backdropClassName
       )}
+      onClick={handleBackdropClick}
+      onMouseDown={(e) => e.preventDefault()}
+      onTouchStart={(e) => e.preventDefault()}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape' && dismissible && onDismiss) {
+          onDismiss();
+        }
+      }}
     >
       <div
         className={cn(
           "bg-white rounded-lg p-6 shadow-lg",
           "flex flex-col items-center justify-center space-y-4",
           "min-w-[200px] min-h-[120px]",
+          "pointer-events-auto",
           className
         )}
+        onClick={handleContentClick}
       >
         <Loader2
           className={cn(

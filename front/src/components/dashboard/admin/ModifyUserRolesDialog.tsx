@@ -47,7 +47,7 @@ function ModifyUserRolesDialog( { userAddress }: { userAddress: string } ) {
     <>  
     <LoadingOverlay 
     isVisible={isSubmitting}
-    message="Modification en cours..."
+    message="Modification des rôles en cours..."
     />
     <Dialog open={open} onOpenChange={handleOpenChange} >
       <DialogTrigger asChild>
@@ -117,10 +117,10 @@ function ModifyUserRolesDialog( { userAddress }: { userAddress: string } ) {
           <Button 
             type="submit" 
             onClick={() => handleSubmit()} 
-            disabled={newUserRole === "" || isSubmitting}
             className="w-full bg-genshi-blue-secondary text-white"
+            disabled={isSubmitting || newUserRole === ""}
           >
-            {isSubmitting ? "Ajout en cours..." : "Ajouter"}
+            {isSubmitting ? "Modification en cours..." : "Modifier"}
           </Button>
         </div>
         <DialogFooter>

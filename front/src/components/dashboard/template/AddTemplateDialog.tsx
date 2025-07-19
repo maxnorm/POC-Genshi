@@ -89,6 +89,7 @@ function AddTemplateDialog() {
             type="submit" 
             onClick={() => handleSubmit()} 
             className="w-full bg-genshi-blue-secondary text-white"
+            disabled={isSubmitting || !name.trim() || !nftType}
           >
             {isSubmitting ? "Ajout en cours..." : "Ajouter"}
           </Button>
