@@ -3,9 +3,9 @@ import { useAdmin } from "@/contexts/useAdmin";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { ROLES, ROLES_LABELS } from "@/lib/constants/roles";
 import { User } from "@/lib/types/User";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import AddUserDialog from "./AddUserDialog";
+import ModifyUserRolesDialog from "./ModifyUserRolesDialog";
 
 function UsersTable() {
   const { allUsers, isLoadingUser } = useAdmin();
@@ -70,9 +70,7 @@ function UsersTable() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Button size="sm" variant="genshiSimple" onClick={() => { /* TODO: open grant modal */ }}>
-                      Modifier les rôles
-                    </Button>
+                    <ModifyUserRolesDialog userAddress={user.address} />
                   </TableCell>
                 </TableRow>
               ))

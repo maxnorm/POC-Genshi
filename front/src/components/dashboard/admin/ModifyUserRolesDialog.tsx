@@ -12,20 +12,21 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ROLES, ROLES_LABELS } from "@/lib/constants/roles";  
-import useAddUserForm from "@/hooks/forms/useAddUserForm";
+import useModifyUserRolesForm from "@/hooks/forms/useModifyUserRolesForm";
+import { useAdmin } from "@/contexts/useAdmin";
 
 function ModifyUserRolesDialog( { userAddress }: { userAddress: string } ) {  
   const [open, setOpen] = useState(false);
+  const { allUsers } = useAdmin();
+
   const { 
-    newUserAddress, 
-    handleAddressChange, 
     newUserRole, 
     handleRoleChange, 
     isSubmitting, 
     error,
     resetForm,
     handle 
-  } = useAddUserForm();
+  } = useModifyUserRolesForm();
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
@@ -35,7 +36,7 @@ function ModifyUserRolesDialog( { userAddress }: { userAddress: string } ) {
   };
 
   const handleSubmit = async () => {
-    const result = await handle();
+    const result = await handle(userAddress);
     if (result.success) {
       setOpen(false);
     }
@@ -63,11 +64,23 @@ function ModifyUserRolesDialog( { userAddress }: { userAddress: string } ) {
             {`Rôles actuels`}
           </DialogTitle>
           <div className="flex flex-wrap gap-2">
-            {Object.keys(ROLES).map((role) => (
-              <span key={role} className="inline-block bg-genshi-blue-secondary/70 shadow-sm text-white text-xs font-semibold px-2 py-1 rounded-full">
-                {ROLES_LABELS[role as keyof typeof ROLES_LABELS]}
-              </span>
-            ))}
+            {(() => {
+              const user = allUsers.find((u: any) => u.address.toLowerCase() === userAddress.toLowerCase());
+              if (!user) {
+                return <span className="text-gray-500">Aucun rôle trouvé</span>;
+              }
+              
+              const activeRoles = Object.entries(user.roles).filter(([_, hasRole]) => hasRole);
+              if (activeRoles.length === 0) {
+                return <span className="text-gray-500">Aucun rôle actif</span>;
+              }
+              
+              return activeRoles.map(([role, _]) => (
+                <span key={role} className="inline-block bg-genshi-blue-secondary/70 shadow-sm text-white text-xs font-semibold px-2 py-1 rounded-full">
+                  {ROLES_LABELS[role as keyof typeof ROLES_LABELS]}
+                </span>
+              ));
+            })()}
           </div>
         </div>
         <div className="flex flex-col gap-2">
@@ -80,7 +93,7 @@ function ModifyUserRolesDialog( { userAddress }: { userAddress: string } ) {
             </SelectTrigger>
           <SelectContent>
             {Object.keys(ROLES).map((role) => (
-              role == "DEFAULT_ADMIN_ROLE" ? null : (
+              role === "DEFAULT_ADMIN_ROLE" ? null : (
                 <SelectItem key={role} value={role}>
                   {ROLES_LABELS[role as keyof typeof ROLES_LABELS]}
                 </SelectItem>
@@ -98,7 +111,7 @@ function ModifyUserRolesDialog( { userAddress }: { userAddress: string } ) {
           <Button 
             type="submit" 
             onClick={() => handleSubmit()} 
-            disabled={newUserAddress.trim() === "" || newUserRole === "" || isSubmitting}
+            disabled={newUserRole === "" || isSubmitting}
             className="w-full bg-genshi-blue-secondary text-white"
           >
             {isSubmitting ? "Ajout en cours..." : "Ajouter"}

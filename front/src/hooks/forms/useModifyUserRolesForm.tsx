@@ -5,35 +5,39 @@ import { useAdmin } from "@/contexts/useAdmin";
 import { toast } from "sonner";
 
 /**
- * Hook to add a user to the contract
+ * Hook to modify user roles in the contract
  * @returns {Object} The form state and the handle function
  */
-function useAddUserForm() { 
-  const [newUserAddress, setNewUserAddress] = useState("");
+function useModifyUserRolesForm() { 
   const [newUserRole, setNewUserRole] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { handleGrantRole, isPending } = useAdmin();
 
-  const handle = async () => {
+  const handle = async (userAddress: string) => {
+    if (!newUserRole.trim()) {
+      setError("Veuillez sélectionner un rôle");
+      return { success: false, error: "Veuillez sélectionner un rôle" };
+    }
+
     setIsSubmitting(true);
     setError(null);
-    try { 
-      const result = await handleGrantRole(newUserAddress, newUserRole);
+    try {
+      const result = await handleGrantRole(userAddress, newUserRole);
+      console.log(result);
       
       if (result.success) {
-        setNewUserAddress("");
         setNewUserRole("");
-        toast.success("Utilisateur ajouté avec succès!");
+        toast.success("Rôle ajouté avec succès!");
         return { success: true, hash: result.hash };
       } else {
-        const errorMessage = result.error?.message || "Une erreur s'est produite lors de l'ajout de l'utilisateur";
+        const errorMessage = result.error?.message || "Une erreur s'est produite lors de l'ajout du rôle";
         setError(errorMessage);
         toast.error(errorMessage);
         return { success: false, error: result.error };
       }
     } catch (error: any) {
-      const errorMessage = error?.message || "Une erreur s'est produite lors de l'ajout de l'utilisateur";
+      const errorMessage = error?.message || "Une erreur s'est produite lors de l'ajout du rôle";
       setError(errorMessage);
       toast.error(errorMessage);
       return { success: false, error };
@@ -47,15 +51,9 @@ function useAddUserForm() {
   };
 
   const resetForm = () => {
-    setNewUserAddress("");
     setNewUserRole("");
     clearError();
   }
-
-  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewUserAddress(e.target.value);
-    if (error) clearError();
-  };
 
   const handleRoleChange = (value: string) => {
     setNewUserRole(value);
@@ -63,8 +61,6 @@ function useAddUserForm() {
   };
 
   return {
-    newUserAddress,
-    handleAddressChange,
     newUserRole,
     handleRoleChange,
     isSubmitting: isSubmitting || isPending,
@@ -75,4 +71,4 @@ function useAddUserForm() {
   }
 }
 
-export default useAddUserForm;
+export default useModifyUserRolesForm; 

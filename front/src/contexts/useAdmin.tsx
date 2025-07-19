@@ -31,7 +31,8 @@ const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [isSuccess, error, pendingTransaction, hash ]);
 
-  const handleAddUser = async (address: string, role: string): Promise<{ success: boolean; hash?: string; error?: any }> => {
+
+  const handleGrantRole = async (address: string, role: string): Promise<{ success: boolean; hash?: string; error?: any }> => {
     try {
       await write("grantRole", [ROLES[role as keyof typeof ROLES], address]);
       
@@ -39,7 +40,7 @@ const AdminProvider = ({ children }: { children: React.ReactNode }) => {
         setPendingTransaction({ resolve, reject });
       });
     } catch (error) {
-      console.error("Failed to add user:", error);
+      console.error("Failed to grant role:", error);
       return { success: false, error };
     }
   }
@@ -49,7 +50,7 @@ const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     isLoadingUser,
     roleGrantedCount,
     roleRevokedCount,
-    handleAddUser,
+    handleGrantRole,
     isPending,
   };
 
