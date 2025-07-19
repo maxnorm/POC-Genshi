@@ -1,8 +1,6 @@
-import { PageHeader } from "@/components/dashboard/PageHeader";
-import DashboardStats from "@/components/dashboard/DashboardStats";
-import RecentActivity from "@/components/dashboard/RecentActivity";
-import QuickActions from "@/components/dashboard/QuickActions";
 import { Metadata } from "next";
+import TemplatePage from "@/components/pages/dashboard/TemplatePage";
+import Access from "@/components/Access";
 
 export const metadata: Metadata = {
   title: "Templates – GENSHI",
@@ -15,9 +13,9 @@ export const metadata: Metadata = {
 
 function Templates() {
   return (
-    <div className="space-y-6">
-      <PageHeader title="Modèles" description="Gérez vos modèles de données" />
-    </div>
+    <Access requiredRoles={['TEMPLATE_MANAGER']}>
+      <TemplatePage />
+    </Access>
   );
 }
 

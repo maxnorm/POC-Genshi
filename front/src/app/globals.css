@@ -6,6 +6,8 @@
 @theme inline {
   --color-genshi-blue: #03c0f9;
   --color-genshi-blue-secondary: #000f24;
+  --color-green: #00984e;
+  --color-red: #ff0000;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
