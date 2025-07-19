@@ -25,19 +25,19 @@ function TemplatePage() {
       icon: CheckCircle,
     },
     {
-      title: "Modèles Pièces",
+      title: "Modèles de Pièces",
       value: pieceTemplates.length.toString(),
       change: "modèles pour composants individuels",
       icon: Package,
     },
     {
-      title: "Modèles Assemblage",
+      title: "Modèles d'Assemblage",
       value: assemblyTemplates.length.toString(),
       change: "modèles pour assemblages composables",
       icon: Layers,
     },
     {
-      title: "Modèles Équipement",
+      title: "Modèles d'Équipement",
       value: equipmentTemplates.length.toString(),
       change: "modèles pour équipements",
       icon: Settings,
