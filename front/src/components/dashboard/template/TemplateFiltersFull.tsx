@@ -36,7 +36,7 @@ function TemplateFiltersFull({
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
-            placeholder="Rechercher par nom ou ID..."
+            placeholder={"Rechercher par nom ou ID..."}
             value={filters.search || ""}
             onChange={(e) => onSearchChange(e.target.value)}
             className="pl-10"
@@ -91,7 +91,7 @@ function TemplateFiltersFull({
         <div className="flex flex-wrap gap-2">
           {filters.type && (
             <div className={activeFilterStyle}>
-              Type: {filters.type}
+              {"Type: " + filters.type}
               <button
                 onClick={() => onTypeChange(null)}
                 className="ml-1 "
@@ -102,7 +102,7 @@ function TemplateFiltersFull({
           )}
           {filters.status !== null && (
             <div className={activeFilterStyle}>
-              Statut: {filters.status === 0 ? "Brouillon" : filters.status === 1 ? "Actif" : "Inactif"}
+              {"Statut: " + (filters.status === 0 ? "Brouillon" : filters.status === 1 ? "Actif" : "Inactif")}
               <button
                 onClick={() => onStatusChange(null)}
                 className="ml-1 "
@@ -113,7 +113,7 @@ function TemplateFiltersFull({
           )}
           {filters.search && (
             <div className={activeFilterStyle}>
-              Recherche: "{filters.search}"
+              {"Recherche: " + filters.search}
               <button
                 onClick={() => onSearchChange("")}
                 className="ml-1 "
