@@ -57,7 +57,7 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
       ref={overlayRef}
       tabIndex={-1}
       className={cn(
-        "fixed inset-0 z-[10000] flex items-center justify-center",
+        "fixed inset-0 z-[10000] flex items-center justify-center w-screen h-screen",
         "bg-black/50 backdrop-blur-sm",
         "pointer-events-auto",
         backdropClassName
