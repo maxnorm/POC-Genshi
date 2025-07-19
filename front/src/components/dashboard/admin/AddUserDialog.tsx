@@ -14,6 +14,7 @@ import { Plus } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ROLES, ROLES_LABELS } from "@/lib/constants/roles";  
 import useAddUserForm from "@/hooks/forms/useAddUserForm";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 function AddUserDialog() {
   const [open, setOpen] = useState(false);
@@ -43,6 +44,11 @@ function AddUserDialog() {
   }
 
   return (
+    <>
+    <LoadingOverlay 
+      isVisible={isSubmitting}
+      message="Ajout en cours..."
+    />
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="genshiSimple" onClick={() => setOpen(true)}>
@@ -95,6 +101,7 @@ function AddUserDialog() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    </>
   );
 }
 

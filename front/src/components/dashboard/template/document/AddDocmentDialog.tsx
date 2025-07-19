@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { COMMON_MIME_TYPES } from "@/lib/constants/commonMimeTypes";
 import useAddDocumentForm from "@/hooks/forms/useAddDocumentForm";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 interface AddDocumentDialogProps {
   templateId: number;
@@ -57,6 +58,11 @@ function AddDocumentDialog({ templateId }: AddDocumentDialogProps) {
   const activeFilterXStyle = "h-3 w-3 hover:h-4 hover:w-4 transition-all duration-200 hover:text-genshi-blue-secondary";
 
   return (
+    <>
+    <LoadingOverlay 
+    isVisible={isSubmitting}
+    message="Ajout du document en cours..."
+    />
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="genshiSimple">
@@ -163,6 +169,7 @@ function AddDocumentDialog({ templateId }: AddDocumentDialogProps) {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    </>
   );
 }
 

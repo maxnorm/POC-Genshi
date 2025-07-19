@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ROLES, ROLES_LABELS } from "@/lib/constants/roles";  
 import useModifyUserRolesForm from "@/hooks/forms/useModifyUserRolesForm";
 import { useAdmin } from "@/contexts/useAdmin";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 function ModifyUserRolesDialog( { userAddress }: { userAddress: string } ) {  
   const [open, setOpen] = useState(false);
@@ -43,6 +44,11 @@ function ModifyUserRolesDialog( { userAddress }: { userAddress: string } ) {
   }
 
   return (
+    <>  
+    <LoadingOverlay 
+    isVisible={isSubmitting}
+    message="Modification en cours..."
+    />
     <Dialog open={open} onOpenChange={handleOpenChange} >
       <DialogTrigger asChild>
         <Button variant="genshiSimple" onClick={() => setOpen(true)}>
@@ -121,6 +127,7 @@ function ModifyUserRolesDialog( { userAddress }: { userAddress: string } ) {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    </>
   );  
 }
 

@@ -15,6 +15,7 @@ import { Plus } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { NFTType } from "@/lib/enums/nftType";
 import useAddTemplateForm from "@/hooks/forms/useAddTemplateForm";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 function AddTemplateDialog() {
   const router = useRouter();
@@ -39,6 +40,11 @@ function AddTemplateDialog() {
   }
 
   return (
+    <>
+    <LoadingOverlay 
+    isVisible={isSubmitting}
+    message="Ajout du modèle en cours..."
+    />
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="genshiSimple" onClick={() => setOpen(true)}>
@@ -84,11 +90,12 @@ function AddTemplateDialog() {
             onClick={() => handleSubmit()} 
             className="w-full bg-genshi-blue-secondary text-white"
           >
-            {"Ajouter"}
+            {isSubmitting ? "Ajout en cours..." : "Ajouter"}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    </>
   );
 }
 

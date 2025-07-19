@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import useAddAttributeForm from "@/hooks/forms/useAddAttributeForm";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 interface AddAttributeDialogProps {
   templateId: number;
@@ -61,6 +62,11 @@ function AddAttributeDialog({ templateId }: AddAttributeDialogProps) {
   const activeFilterXStyle = "h-3 w-3 hover:h-4 hover:w-4 transition-all duration-200 hover:text-genshi-blue-secondary";
 
   return (
+    <>
+    <LoadingOverlay 
+    isVisible={isSubmitting}
+    message="Ajout de l'attribut en cours..."
+    />
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="genshiSimple">
@@ -185,6 +191,7 @@ function AddAttributeDialog({ templateId }: AddAttributeDialogProps) {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    </>
   );
 }
 
