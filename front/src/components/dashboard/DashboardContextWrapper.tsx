@@ -1,6 +1,7 @@
 "use client";
 
 import { AdminProvider } from "@/contexts/useAdmin";
+import { TemplateProvider } from "@/contexts/useTemplate";
 import { useUser } from "@/contexts/useUser";
 import { useAccount } from "wagmi";
 import NoAccessPage from "../pages/NoAccessPage";
@@ -22,6 +23,14 @@ function DashboardContextWrapper({ children }: { children: React.ReactNode }) {
       <AdminProvider>
         {children}
       </AdminProvider>
+    );
+  }
+
+  if (address && hasRole("TEMPLATE_MANAGER")) {
+    wrappedChildren = (
+      <TemplateProvider>
+        {children}
+      </TemplateProvider>
     );
   }
 

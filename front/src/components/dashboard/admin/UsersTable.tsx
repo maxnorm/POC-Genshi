@@ -28,7 +28,6 @@ function UsersTable() {
             <TableRow>
               <TableHead>Adresse</TableHead>
               <TableHead>Rôles</TableHead>
-              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

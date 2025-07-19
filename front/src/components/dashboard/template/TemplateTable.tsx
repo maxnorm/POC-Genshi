@@ -1,38 +1,28 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAdmin } from "@/contexts/useAdmin";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { ROLES, ROLES_LABELS } from "@/lib/constants/roles";
-import { User } from "@/lib/types/User";
-import { Skeleton } from "@/components/ui/skeleton";
-import AddUserDialog from "../admin/AddUserDialog";
-import ModifyUserRolesDialog from "../admin/ModifyUserRolesDialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTemplate } from "@/contexts/useTemplate";
+import AddTemplateDialog from "./AddTemplateDialog";
 
 function TemplateTable() {
-  const data = [
-    {
-      id: 1,
-      name: "Pièce",
-      status: 1,
-    },
-  ];
+  const { templates: data } = useTemplate();
 
   return (
     <Card className="col-span-4">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div className="flex gap-2">
-          <Button variant={"genshi"}>
+          <Button variant={"genshi"} size={"sm"}>
             Pièce
           </Button>
-          <Button>
+          <Button size={"sm"}>
             Assemblage
           </Button>
-          <Button>
+          <Button size={"sm"}>
             Équipement
           </Button>
         </div>
-        <AddUserDialog />
+        <AddTemplateDialog />
       </CardHeader>
       <CardContent>
         <Table>
@@ -41,7 +31,6 @@ function TemplateTable() {
               <TableHead>ID</TableHead>
               <TableHead>Nom</TableHead>
               <TableHead>Statut</TableHead>
-              <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -50,7 +39,7 @@ function TemplateTable() {
                 <TableCell colSpan={3}>Aucun modèles trouvé</TableCell>
               </TableRow>
             ) : (
-              data.map((item) => (
+              data.map((item: any) => (
                 <TableRow key={item.id}>
                   <TableCell>{item.id}</TableCell>
                   <TableCell>
@@ -58,14 +47,17 @@ function TemplateTable() {
                   </TableCell>
                   <TableCell>
                     <span className={cn("inline-block shadow-sm text-white text-xs font-bold px-4 py-1 rounded-full",
+                      item.status === 0 && "bg-genshi-blue-secondary/50",
                       item.status === 1 && "bg-green",
-                      item.status === 0 && "bg-red",
+                      item.status === 2 && "bg-red",
                     )}>
-                      {item.status === 1 ? "Actif" : "Désactivé"}
+                      {item.status === 0 ? "Brouillon" : 
+                       item.status === 1 ? "Actif" : 
+                       item.status === 2 ? "Désactivé" : "Inconnu"}
                     </span>
                   </TableCell>
-                  <TableCell>
-                    <Button variant={"genshiSimple"} size={"sm"}>
+                  <TableCell className="flex justify-end">
+                    <Button variant={"genshiSimple"} size={"sm"} className="px-12">
                       Modifier
                     </Button>
                   </TableCell>

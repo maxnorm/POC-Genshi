@@ -7,8 +7,11 @@ import { ROLES } from "@/lib/constants/roles";
 const roleGrantedEventABI = 'event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender)';
 const roleRevokedEventABI = 'event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender)';
 
-
-function useUsersFetch() {
+/**
+ * Hook to fetch users from the contract by listening to emitted events
+ * @returns {Object} The users and the loading state
+ */
+function useFetchUsers() {
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [roleGrantedCount, setRoleGrantedCount] = useState(0);
   const [roleRevokedCount, setRoleRevokedCount] = useState(0);
@@ -35,6 +38,11 @@ function useUsersFetch() {
       blockTimestamp: log.blockTimestamp,
     })
   );
+
+  const refetchAll = useCallback(() => {
+    refetchRoleGrantedEvents();
+    refetchRoleRevokedEvents();
+  }, [refetchRoleGrantedEvents, refetchRoleRevokedEvents]);
 
   const processRoleEvents = useCallback(async () => {
     setIsLoadingUser(true);
@@ -99,9 +107,10 @@ function useUsersFetch() {
     isLoadingUser,
     refetchRoleGrantedEvents,
     refetchRoleRevokedEvents,
+    refetchAll,
     roleGrantedCount,
     roleRevokedCount,
   };
 }
 
-export default useUsersFetch;
+export default useFetchUsers;
