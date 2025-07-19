@@ -1,6 +1,6 @@
 'use client';
 
-import { PageHeader } from "@/components/dashboard/PageHeader";
+import PageHeader from "@/components/dashboard/PageHeader";
 import PageWrapper from "@/components/dashboard/PageWrapper";
 import { useEffect } from "react";
 import TemplateInfoCard from "@/components/dashboard/template/TemplateInfoCard";
