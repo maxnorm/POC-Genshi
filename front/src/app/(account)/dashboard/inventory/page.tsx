@@ -1,5 +1,5 @@
 import Access from "@/components/Access";
-import { PageHeader } from "@/components/dashboard/PageHeader";
+import PageHeader from "@/components/dashboard/PageHeader";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

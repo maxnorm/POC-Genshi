@@ -1,4 +1,4 @@
-import { PageHeader } from "@/components/dashboard/PageHeader";
+import PageHeader from "@/components/dashboard/PageHeader";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
