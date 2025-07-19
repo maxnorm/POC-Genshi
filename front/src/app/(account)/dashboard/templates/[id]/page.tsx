@@ -2,9 +2,9 @@ import { Metadata } from "next";
 import TemplateItemPage from "@/components/pages/dashboard/template/TemplateItemPage";
 
 interface TemplatePageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: TemplatePageProps): Promise<Metadata> {
