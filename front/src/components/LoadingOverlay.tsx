@@ -23,19 +23,6 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
   dismissible = false,
   onDismiss,
 }) => {
-  if (!isVisible) return null;
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (dismissible && onDismiss) {
-      onDismiss();
-    }
-  };
-
-  const handleContentClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
-
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -51,6 +38,19 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
       };
     }
   }, [isVisible]);
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (dismissible && onDismiss) {
+      onDismiss();
+    }
+  };
+
+  const handleContentClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
+  if (!isVisible) return null;
 
   return (
     <div
