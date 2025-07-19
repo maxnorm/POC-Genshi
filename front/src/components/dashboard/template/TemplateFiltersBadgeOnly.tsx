@@ -31,7 +31,7 @@ function TemplateFiltersBadgeOnly({
         <div className="flex flex-wrap gap-2">
           {filters.type && (
             <div className={activeFilterStyle}>
-              Type: {filters.type}
+              {"Type: " + filters.type}
               <button
                 onClick={() => onTypeChange(null)}
                 className="ml-1 "
@@ -42,7 +42,7 @@ function TemplateFiltersBadgeOnly({
           )}
           {filters.status !== null && (
             <div className={activeFilterStyle}>
-              Statut: {filters.status === 0 ? "Brouillon" : filters.status === 1 ? "Actif" : "Inactif"}
+              {"Statut: " + (filters.status === 0 ? "Brouillon" : filters.status === 1 ? "Actif" : "Inactif")}
               <button
                 onClick={() => onStatusChange(null)}
                 className="ml-1 "
@@ -53,7 +53,7 @@ function TemplateFiltersBadgeOnly({
           )}
           {filters.search && (
             <div className={activeFilterStyle}>
-              Recherche: "{filters.search}"
+              {"Recherche: " + filters.search}
               <button
                 onClick={() => onSearchChange("")}
                 className="ml-1 "

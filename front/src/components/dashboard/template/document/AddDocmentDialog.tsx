@@ -61,20 +61,20 @@ function AddDocumentDialog({ templateId }: AddDocumentDialogProps) {
       <DialogTrigger asChild>
         <Button variant="genshiSimple">
           <Plus className="w-4 h-4 mr-2" />
-          Ajouter un document
+          {"Ajouter un document"}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px] max-h-[600px] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Ajouter un document à ce modèle</DialogTitle>
+          <DialogTitle>{"Ajouter un document à ce modèle"}</DialogTitle>
           <DialogDescription className="text-black">
-            Définissez les propriétés du document
+            {"Définissez les propriétés du document"}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="name">Nom du document *</Label>
+            <Label htmlFor="name">{"Nom du document *"}</Label>
             <Input
               id="name"
               placeholder="ex: Certificat de matériau, Test de pression, Rapport d'inspection..."
@@ -84,10 +84,10 @@ function AddDocumentDialog({ templateId }: AddDocumentDialogProps) {
           </div>
 
           <div className="space-y-2">
-            <Label>Types MIME autorisés *</Label>
+            <Label>{"Types MIME autorisés *"}</Label>
             <Select onValueChange={(value) => addMimeType(COMMON_MIME_TYPES.find((mimeType) => mimeType.value === value)!)}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Sélectionnez des types MIME courants" />
+                <SelectValue placeholder={"Sélectionnez des types MIME courants"} />
               </SelectTrigger>
               <SelectContent >
                 {COMMON_MIME_TYPES.map((mimeType) => (
@@ -109,7 +109,7 @@ function AddDocumentDialog({ templateId }: AddDocumentDialogProps) {
             
             {allowedMimeTypes.length > 0 && (
               <div className="space-y-2">
-                <Label className="text-sm text-gray-600">Types sélectionnés:</Label>
+                <Label className="text-sm text-gray-600">{"Types sélectionnés:"}</Label>
                 <div className="flex flex-wrap gap-2">
                   {allowedMimeTypes.map((mimeTypeValue: string, index: number) => (
                     <div
@@ -131,7 +131,7 @@ function AddDocumentDialog({ templateId }: AddDocumentDialogProps) {
             )}
 
             <div className="text-sm text-gray-500">
-              Sélectionnez les types de fichiers autorisés pour ce document
+              {"Sélectionnez les types de fichiers autorisés pour ce document"}
             </div>
           </div>
 
@@ -141,7 +141,7 @@ function AddDocumentDialog({ templateId }: AddDocumentDialogProps) {
               checked={required}
               onCheckedChange={handleRequiredChange}
             />
-            <Label htmlFor="required">Document obligatoire pour la validation du NFT</Label>
+            <Label htmlFor="required">{"Document obligatoire pour la validation du NFT"}</Label>
           </div>
 
           {error && (

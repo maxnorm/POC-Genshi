@@ -15,7 +15,7 @@ function DocumentCard({template}: {template: any}) {
       <CardTitle className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-lg font-semibold">
           <FileText className="w-5 h-5" />
-          Documents
+          {"Documents"}
         </div>
         {template.status === 0 && (
           <AddDocumentDialog templateId={template.id} />
@@ -63,8 +63,8 @@ function DocumentCard({template}: {template: any}) {
         </div>
       ) : (
         <div className="text-center py-8 text-gray-500">
-          <p>Aucun document défini</p>
-          <p className="text-sm">Ajoutez des documents pour définir les fichiers requis pour ce modèle</p>
+          <p>{"Aucun document défini"}</p>
+          <p className="text-sm">{"Ajoutez des documents pour définir les fichiers requis pour ce modèle"}</p>
         </div>
       )}
     </CardContent>

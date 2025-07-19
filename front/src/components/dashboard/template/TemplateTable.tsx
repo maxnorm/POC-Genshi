@@ -68,11 +68,11 @@ function TemplateTable() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>Nom</TableHead>
-              <TableHead>Statut</TableHead>
-              <TableHead>Type NFT</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>{"ID"}</TableHead>
+              <TableHead>{"Nom"}</TableHead>
+              <TableHead>{"Statut"}</TableHead>
+              <TableHead>{"Type NFT"}</TableHead> 
+              <TableHead className="text-right">{"Actions"}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -98,7 +98,7 @@ function TemplateTable() {
                   <TableCell className="text-right">
                     <Button variant={"genshiSimple"} size={"sm"} className="px-12" asChild>
                       <Link href={`/dashboard/templates/${item.id}`}>
-                        Modifier
+                        {"Modifier"}
                       </Link>
                     </Button>
                   </TableCell>

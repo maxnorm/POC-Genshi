@@ -29,7 +29,7 @@ function TemplateFiltersFull({
   return (
     <div className="flex flex-col gap-4 p-4 bg-gray-50 rounded-lg border">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-gray-700">Filtres</h3>
+        <h3 className="text-sm font-medium text-gray-700">{"Filtres"}</h3>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
@@ -51,7 +51,7 @@ function TemplateFiltersFull({
               <SelectValue placeholder="Type de NFT" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Tous les types</SelectItem>
+              <SelectItem value="all">{"Tous les types"}</SelectItem>
               <SelectItem value={NFTType.Piece}>{NFTType.Piece}</SelectItem>
               <SelectItem value={NFTType.Assembly}>{NFTType.Assembly}</SelectItem>
               <SelectItem value={NFTType.Equipment}>{NFTType.Equipment}</SelectItem>
@@ -66,10 +66,10 @@ function TemplateFiltersFull({
               <SelectValue placeholder="Statut" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Tous les statuts</SelectItem>
-              <SelectItem value="0">Brouillon</SelectItem>
-              <SelectItem value="1">Actif</SelectItem>
-              <SelectItem value="2">Inactif</SelectItem>
+              <SelectItem value="all">{"Tous les statuts"}</SelectItem>
+              <SelectItem value="0">{"Brouillon"}</SelectItem>
+              <SelectItem value="1">{"Actif"}</SelectItem>
+              <SelectItem value="2">{"Inactif"}</SelectItem>
             </SelectContent>
           </Select>
         
@@ -81,7 +81,7 @@ function TemplateFiltersFull({
               className="text-gray-500 hover:text-gray-700"
             >
               <X className="h-4 w-4 mr-1" />
-              Effacer les filtres
+              {"Effacer les filtres"}
             </Button>
           )}
         </div>

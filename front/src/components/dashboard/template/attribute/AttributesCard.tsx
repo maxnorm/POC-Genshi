@@ -13,7 +13,7 @@ function AttributesCard({template}: {template: any}) {
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-lg font-semibold">
             <Tag className="w-5 h-5" />
-            Attributs
+            {"Attributs"}
           </div>
           {template.status === 0 && (
             <AddAttributeDialog templateId={template.id} />
@@ -33,14 +33,14 @@ function AttributesCard({template}: {template: any}) {
                     </span>
                     {attr.required && (
                       <span className="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">
-                        Requis
+                        {"Requis"}
                       </span>
                     )}
                   </div>
 
                   {attr.units && (
                     <div className="text-sm text-gray-600 mt-1">
-                      Unités: {attr.units}
+                      {"Unités: " + attr.units}
                     </div>
                   )}
 
@@ -68,8 +68,8 @@ function AttributesCard({template}: {template: any}) {
           </div>
         ) : (
           <div className="text-center py-8 text-gray-500">
-            <p>Aucun attribut défini</p>
-            <p className="text-sm">Ajoutez des attributs pour définir les propriétés de ce modèle</p>
+            <p>{"Aucun attribut défini"}</p>
+            <p className="text-sm">{"Ajoutez des attributs pour définir les propriétés de ce modèle"}</p>
           </div>
         )}
       </CardContent>

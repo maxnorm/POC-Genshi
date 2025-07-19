@@ -65,20 +65,20 @@ function AddAttributeDialog({ templateId }: AddAttributeDialogProps) {
       <DialogTrigger asChild>
         <Button variant="genshiSimple">
           <Plus className="w-4 h-4 mr-2" />
-          Ajouter un attribut
+          {"Ajouter un attribut"}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px] max-h-[600px] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Ajouter un attribut à ce modèle</DialogTitle>
+          <DialogTitle>{"Ajouter un attribut à ce modèle"}</DialogTitle>
           <DialogDescription className="text-black">
-            Définissez les propriétés de l'attribut
+            {"Définissez les propriétés de l'attribut"}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="name">Nom de l'attribut *</Label>
+            <Label htmlFor="name">{"Nom de l'attribut *"}</Label>
             <Input
               id="name"
               placeholder="ex: Numéro de série, Matériau, Pression..."
@@ -89,10 +89,10 @@ function AddAttributeDialog({ templateId }: AddAttributeDialogProps) {
 
           <div className="flex flex-row gap-2">
             <div className="space-y-2 flex-1">
-              <Label htmlFor="type">Type d'attribut *</Label>
+              <Label htmlFor="type">{"Type d'attribut *"}</Label>
               <Select value={attributeType} onValueChange={handleTypeChange}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Sélectionnez un type" />
+                  <SelectValue placeholder={"Sélectionnez un type"} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="string">Texte</SelectItem>
@@ -104,7 +104,7 @@ function AddAttributeDialog({ templateId }: AddAttributeDialogProps) {
             </div>
 
             <div className="space-y-2 flex-1">
-              <Label htmlFor="units">Unités</Label>
+              <Label htmlFor="units">{"Unités"}</Label>
               <Input
                 id="units"
                 placeholder="ex: mm, MPa, °C, N/A..."
@@ -116,7 +116,7 @@ function AddAttributeDialog({ templateId }: AddAttributeDialogProps) {
 
           {attributeType === "enum" && (
             <div className="space-y-2">
-              <Label>Valeurs autorisées *</Label>
+              <Label>{"Valeurs autorisées *"}</Label>
               <div className="flex gap-2">
                 <Input
                   placeholder="Ajouter une valeur..."
@@ -163,7 +163,7 @@ function AddAttributeDialog({ templateId }: AddAttributeDialogProps) {
               checked={required}
               onCheckedChange={handleRequiredChange}
             />
-            <Label htmlFor="required">Attribut obligatoire pour la validation du NFT</Label>
+            <Label htmlFor="required">{"Attribut obligatoire pour la validation du NFT"}</Label>
           </div>
 
           {error && (
