@@ -15,7 +15,6 @@ function useFetchTemplates() {
   
   const [templates, setTemplates] = useState<any[]>([]);
   const [isLoadingTemplates, setIsLoadingTemplates] = useState(true);
-  const [lastCreatedTemplateId, setLastCreatedTemplateId] = useState<number | null>(null);
 
   const { events: templateCreatedEvents, refetch: refetchTemplateCreatedEvents } = useContractEvent(
     Contracts.TemplateRegistry,
@@ -53,7 +52,6 @@ function useFetchTemplates() {
   useEffect(() => {
     const processTemplateEvents = () => {
       const templateMap = new Map();
-      let lastId: number | null = null;
 
       templateCreatedEvents.forEach((event: any) => {
         templateMap.set(event.templateId, {
@@ -64,10 +62,6 @@ function useFetchTemplates() {
           status: 0, // DRAFT
           createdAt: event.blockTimestamp,
         });
-
-        if (!lastId || event.templateId > lastId) {
-          lastId = event.templateId;
-        }
       });
 
       templateActivatedEvents.forEach((event: any) => {
@@ -84,7 +78,6 @@ function useFetchTemplates() {
 
       setTemplates(Array.from(templateMap.values()));
       setIsLoadingTemplates(false);
-      setLastCreatedTemplateId(lastId);
     };
 
     processTemplateEvents();
@@ -99,8 +92,7 @@ function useFetchTemplates() {
   return {
     templates,
     isLoadingTemplates,
-    refetchAll,
-    lastCreatedTemplateId,
+    refetchAll
   };
 }
 

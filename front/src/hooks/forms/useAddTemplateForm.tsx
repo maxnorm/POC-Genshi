@@ -22,11 +22,14 @@ function useAddTemplateForm() {
     try {
       const nftAddress = parseNFTTypeToAddress(nftType as NFTType);
       const result = await handleAddTemplate(name, nftAddress);
+      
       if (result.success) {
         toast.success("Modèle ajouté avec succès!");
         return { success: true, hash: result.hash, templateId: result.templateId };
       } else {
-        toast.error("Une erreur s'est produite lors de l'ajout du modèle");
+        const errorMessage = result.error?.message || "Une erreur s'est produite lors de l'ajout du modèle";
+        toast.error(errorMessage);
+        setError(errorMessage);
         return { success: false, error: result.error };
       }
     } catch (error: any) {  

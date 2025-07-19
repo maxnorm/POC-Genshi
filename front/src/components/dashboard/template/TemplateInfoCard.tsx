@@ -3,6 +3,8 @@ import StatusBadge from "./StatusBadge";
 import { parseNFTAddressToType } from "@/lib/enums/nftType";
 import { Button } from "@/components/ui/button";
 import useTemplateStatusChange from "@/hooks/useTemplateStatusChange";
+import { Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 function TemplateInfoCard({ template }: { template: any }) {
@@ -16,7 +18,11 @@ function TemplateInfoCard({ template }: { template: any }) {
         <CardTitle className="flex items-center justify-between">
           <span>{"Informations du modèle"}</span>
           <div className="flex items-center gap-2">
-            <StatusBadge status={template.status} style="text-sm" />
+            {isStatusChanging ? 
+              <Skeleton className="h-6 w-16" />
+              :
+              <StatusBadge status={template.status} style="text-sm" />
+            }
             {(template.status === 0 || template.status === 1) && hasAttributesOrDocuments && (
               <Button 
                 variant={"genshiSimple"} 
@@ -25,7 +31,7 @@ function TemplateInfoCard({ template }: { template: any }) {
                 onClick={handleStatusButton}
                 disabled={isStatusChanging}
               >
-                {isStatusChanging ? "Chargement..." : (template.status === 0 ? "Activer" : "Désactiver")}
+                {isStatusChanging ? <span className="flex items-center gap-2"><Loader2 className="animate-spin" /> Chargement...</span> : (template.status === 0 ? "Activer" : "Désactiver")}
               </Button>
             )}
           </div>

@@ -9,6 +9,8 @@ import useCurrentTemplate from "@/hooks/useCurrentTemplate";
 import { AttributeDefinition } from "@/lib/types/Attribute";
 import { DocumentDefinition } from "@/lib/types/Document";
 import { TemplateView } from "@/lib/types/Template";
+import { useWaitForTransactionReceipt } from "wagmi"
+import { decodeEventLog } from "viem"
 
 
 const TemplateContext = createContext<any>(null);
@@ -20,22 +22,64 @@ const TemplateContext = createContext<any>(null);
  * @returns {Object} The TemplateProvider component
  */
 const TemplateProvider = ({ children }: { children: React.ReactNode }) => {
-  const { templates, isLoadingTemplates, refetchAll, lastCreatedTemplateId } = useFetchTemplates();
+  const { templates, isLoadingTemplates, refetchAll } = useFetchTemplates();
   const { write, isSuccess, isPending, error, hash } = useWrite(templateRegistryAddress, templateRegistryABI);
   const [pendingTransaction, setPendingTransaction] = useState<{ resolve: (value: any) => void; reject: (reason: any) => void } | null>(null);
   const { currentTemplate, setCurrentTemplate, setAttributes, setDocuments } = useCurrentTemplate();
 
+  const { data: receipt } = useWaitForTransactionReceipt({
+    hash: hash
+  });
+
+  const extractTemplateIdFromReceipt = (receipt: any): number | null => {
+    if (!receipt || !receipt.logs) {
+      return null;
+    }
+    
+    try {
+      for (const log of receipt.logs) {
+        if (log.address.toLowerCase() === templateRegistryAddress.toLowerCase()) {
+          try {
+            const decodedLog = decodeEventLog({
+              abi: templateRegistryABI,
+              data: log.data,
+              topics: log.topics,
+            });
+            
+            if (decodedLog.eventName === 'Template_Created') {
+              const templateId = Number((decodedLog.args as any).templateId);
+              return templateId;
+            }
+          } catch (decodeError) {
+            continue;
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error extracting template ID from receipt:", error);
+    }
+    
+    return null;
+  };
+
   useEffect(() => {
     if (pendingTransaction && (isSuccess || error)) {
-      if (isSuccess) {
+      if (isSuccess && receipt) {
         refetchAll();
-        pendingTransaction.resolve({ success: true, hash, templateId: lastCreatedTemplateId });
+        
+        const templateId = extractTemplateIdFromReceipt(receipt);
+        
+        pendingTransaction.resolve({ 
+          success: true, 
+          hash, 
+          templateId: templateId || undefined 
+        });
       } else if (error) {
         pendingTransaction.reject({ success: false, error });
       }
       setPendingTransaction(null);
     }
-  }, [isSuccess, error, pendingTransaction, hash, templates, refetchAll ]);
+  }, [isSuccess, error, pendingTransaction, hash, receipt, refetchAll]);
 
   const handleAddTemplate = async (name: string, nftAddress: string) => {
     try {
@@ -44,6 +88,7 @@ const TemplateProvider = ({ children }: { children: React.ReactNode }) => {
         setPendingTransaction({ resolve, reject });
       });
     } catch (error) {
+      console.error("Error in handleAddTemplate:", error);
       return { success: false, error };
     }
   }
@@ -99,13 +144,11 @@ const TemplateProvider = ({ children }: { children: React.ReactNode }) => {
         });
       });
     } catch (error) {
-      console.error("Failed to activate template:", error);
       return { success: false, error };
     }
   }
 
   const deactivateTemplate = async (templateId: number) => {
-    console.log("Deactivating template:", templateId);
     try {
       await write("deactivateTemplate", [templateId]);  
       return new Promise((resolve, reject) => { 
