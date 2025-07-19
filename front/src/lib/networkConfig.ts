@@ -49,8 +49,8 @@ const networks: Record<string, NetworkConfig> = {
     wagmiChain: sepoliaWagmi,
     defaultChain: sepoliaViem,
     rpcUrl: process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL,
-    fromBlock: process.env.NEXT_PUBLIC_SEPOLIA_ACCESS_MANAGER_BLOCKNUMBER_DEPLOYED ? 
-      BigInt(process.env.NEXT_PUBLIC_SEPOLIA_ACCESS_MANAGER_BLOCKNUMBER_DEPLOYED) : BigInt(0),
+    fromBlock: process.env.NEXT_PUBLIC_SEPOLIA_BLOCKNUMBER_DEPLOYED ? 
+      BigInt(process.env.NEXT_PUBLIC_SEPOLIA_BLOCKNUMBER_DEPLOYED) : BigInt(0),
     contractsAddresses: {
       [Contracts.AccessManager]: process.env.NEXT_PUBLIC_SEPOLIA_ACCESS_MANAGER_ADDRESS as `0x${string}`,
       [Contracts.TemplateRegistry]: process.env.NEXT_PUBLIC_SEPOLIA_TEMPLATE_REGISTRY_ADDRESS as `0x${string}`,
@@ -64,8 +64,8 @@ const networks: Record<string, NetworkConfig> = {
     wagmiChain: holeskyWagmi,
     defaultChain: holeskyViem,
     rpcUrl: process.env.NEXT_PUBLIC_HOLESKY_RPC_URL,
-    fromBlock: process.env.NEXT_PUBLIC_HOLESKY_ACCESS_MANAGER_BLOCKNUMBER_DEPLOYED ?
-      BigInt(process.env.NEXT_PUBLIC_HOLESKY_ACCESS_MANAGER_BLOCKNUMBER_DEPLOYED) : BigInt(0),
+    fromBlock: process.env.NEXT_PUBLIC_HOLESKY_BLOCKNUMBER_DEPLOYED ?
+      BigInt(process.env.NEXT_PUBLIC_HOLESKY_BLOCKNUMBER_DEPLOYED) : BigInt(0),
     contractsAddresses: {
       [Contracts.AccessManager]: process.env.NEXT_PUBLIC_HOLESKY_ACCESS_MANAGER_ADDRESS as `0x${string}`,
       [Contracts.TemplateRegistry]: process.env.NEXT_PUBLIC_HOLESKY_TEMPLATE_REGISTRY_ADDRESS as `0x${string}`,
