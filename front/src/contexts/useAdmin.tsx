@@ -32,10 +32,8 @@ const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   }, [isSuccess, error, pendingTransaction, hash ]);
 
   const handleAddUser = async (address: string, role: string): Promise<{ success: boolean; hash?: string; error?: any }> => {
-    console.log("Adding user:", address, role);
     try {
       await write("grantRole", [ROLES[role as keyof typeof ROLES], address]);
-      console.log("Transaction submitted");
       
       return new Promise((resolve, reject) => {
         setPendingTransaction({ resolve, reject });

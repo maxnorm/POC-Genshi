@@ -24,7 +24,7 @@ function useAddTemplateForm() {
       const result = await handleAddTemplate(name, nftAddress);
       if (result.success) {
         toast.success("Modèle ajouté avec succès!");
-        return { success: true, hash: result.hash };
+        return { success: true, hash: result.hash, templateId: result.templateId };
       } else {
         toast.error("Une erreur s'est produite lors de l'ajout du modèle");
         return { success: false, error: result.error };

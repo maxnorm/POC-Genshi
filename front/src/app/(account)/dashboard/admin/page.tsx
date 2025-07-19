@@ -1,6 +1,6 @@
 import Access from "@/components/Access";
 import { Metadata } from "next";
-import AdminPage from "@/components/pages/dashboard/AdminPage";
+import AdminPage from "@/components/pages/dashboard/admin/AdminPage";
 
 export const metadata: Metadata = {
   title: "Admin – GENSHI",

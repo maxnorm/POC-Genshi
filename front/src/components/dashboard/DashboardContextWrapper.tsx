@@ -10,35 +10,29 @@ function DashboardContextWrapper({ children }: { children: React.ReactNode }) {
   const { address } = useAccount();
   const { hasRole, hasAnyRole } = useUser();
 
+  if (address && !hasAnyRole()) {
+    return <NoAccessPage hasNoRole={true} />;
+  }
+
   let wrappedChildren = children;
 
-  if (address && !hasAnyRole()) {
+  if (address && hasRole("TEMPLATE_MANAGER")) {
     wrappedChildren = (
-      <NoAccessPage hasNoRole={true} />
+      <TemplateProvider>
+        {wrappedChildren}
+      </TemplateProvider>
     );
   }
 
   if (address && hasRole("DEFAULT_ADMIN_ROLE")) {
     wrappedChildren = (
       <AdminProvider>
-        {children}
+        {wrappedChildren}
       </AdminProvider>
     );
   }
 
-  if (address && hasRole("TEMPLATE_MANAGER")) {
-    wrappedChildren = (
-      <TemplateProvider>
-        {children}
-      </TemplateProvider>
-    );
-  }
-
-  return (
-    <>
-      {wrappedChildren}
-    </>
-  );
+  return <>{wrappedChildren}</>;
 }
 
 export default DashboardContextWrapper;

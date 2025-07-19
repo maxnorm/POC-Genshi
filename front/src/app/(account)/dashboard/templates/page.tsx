@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import TemplatePage from "@/components/pages/dashboard/TemplatePage";
+import TemplatePage from "@/components/pages/dashboard/template/TemplatePage";
 import Access from "@/components/Access";
 
 export const metadata: Metadata = {

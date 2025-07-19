@@ -1,0 +1,17 @@
+export const COMMON_MIME_TYPES = [
+  { value: "application/pdf", label: "PDF Document (.pdf)" },
+  { value: "image/jpeg", label: "JPEG Image (.jpeg)" },
+  { value: "image/png", label: "PNG Image (.png)" },
+  { value: "image/gif", label: "GIF Image (.gif)" },
+  { value: "application/msword", label: "Word Document (.doc)" },
+  { value: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", label: "Word Document (.docx)" },
+  { value: "application/vnd.ms-excel", label: "Excel Spreadsheet (.xls)" },
+  { value: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", label: "Excel Spreadsheet (.xlsx)" },
+  { value: "application/vnd.ms-powerpoint", label: "PowerPoint Presentation (.ppt)" },
+  { value: "application/vnd.openxmlformats-officedocument.presentationml.presentation", label: "PowerPoint Presentation (.pptx)" },
+  { value: "text/plain", label: "Plain Text (.txt)" },
+  { value: "text/csv", label: "CSV File (.csv)" },
+  { value: "application/zip", label: "ZIP Archive (.zip)" },
+  { value: "application/xml", label: "XML Document (.xml)" },
+  { value: "application/json", label: "JSON Document (.json)" },
+];

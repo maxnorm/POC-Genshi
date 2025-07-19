@@ -10,12 +10,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { NFTType } from "@/lib/enums/nftType";
 import useAddTemplateForm from "@/hooks/forms/useAddTemplateForm";
 
 function AddTemplateDialog() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const { name,  nftType, handleNameChange, handleTypeChange, isSubmitting, error, handle, resetForm } = useAddTemplateForm();
 
@@ -30,6 +32,9 @@ function AddTemplateDialog() {
     const result = await handle();
     if (result?.success) {
       setOpen(false);
+      if (result.templateId) {
+        router.push(`/dashboard/templates/${result.templateId}`);
+      }
     }
   }
 
