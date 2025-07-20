@@ -24,8 +24,6 @@ function useModifyUserRolesForm() {
     setError(null);
     try {
       const result = await handleGrantRole(userAddress, newUserRole);
-      console.log(result);
-      
       if (result.success) {
         setNewUserRole("");
         toast.success("Rôle ajouté avec succès!");

@@ -17,8 +17,11 @@ import useAddNftForm from "@/hooks/forms/useAddNftForm";
 import useFetchActiveTemplates from "@/hooks/templates/useFetchActiveTemplates";
 import Link from "next/link";
 import { parseNFTTypeToAddress } from "@/lib/enums/nftType";
+import { useUser } from "@/contexts/useUser";
+import { ROLES } from "@/lib/constants/roles";
 
 function AddNftDialog() {  
+  const { hasRole } = useUser();
   const [open, setOpen] = useState(false);
   const { activeTemplates } = useFetchActiveTemplates();
   const [filteredTemplates, setFilteredTemplates] = useState<any[]>([]);
@@ -74,17 +77,25 @@ function AddNftDialog() {
           <div className="grid grid-cols-3 gap-4">
             {Object.keys(NFTType)
               .filter(type => type !== 'Unknown')
-              .map((type) => (
-                <Button key={type} variant={
-                  selectedType === NFTType[type as keyof typeof NFTType] ? "genshi" : "genshiSimple"
-                } onClick={() => {
-                  const nftType = NFTType[type as keyof typeof NFTType];
-                  handleNftTypeChange(nftType);
-                  filterByType(nftType);
-                }} className="w-full transition-all duration-100">
-                  {NFTType[type as keyof typeof NFTType]}
-                </Button>
-              ))}
+              .map((type) => {
+                const nftType = NFTType[type as keyof typeof NFTType];
+                const requiredRole = type === 'Piece' ? "PIECE_MINTER" : 
+                                    type === 'Assembly' ? "ASSEMBLY_MINTER" : 
+                                    type === 'Equipment' ? "EQUIPMENT_MINTER" : null;
+              
+                if (!requiredRole || !hasRole(requiredRole)) return null;
+                
+                return (
+                  <Button key={type} variant={
+                    selectedType === nftType ? "genshi" : "genshiSimple"
+                  } onClick={() => {
+                    handleNftTypeChange(nftType);
+                    filterByType(nftType);
+                  }} className="w-full transition-all duration-100">
+                    {nftType}
+                  </Button>
+                );
+              })}
           </div>
         </div>
         <div className="flex flex-col gap-2">

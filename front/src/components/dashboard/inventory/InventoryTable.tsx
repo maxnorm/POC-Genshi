@@ -30,11 +30,13 @@ import useInventoryFilter from "@/hooks/inventory/useInventoryFilter";
 import { useInventory } from "@/contexts/useInventory";
 import { NFTItem } from "@/lib/types/NFTItem";
 import AddNftDialog from "@/components/dashboard/inventory/AddNftDialog";
+import { useUser } from "@/contexts/useUser";
 
 function InventoryTable() {
   const [openFilters, setOpenFilters] = useState(false);
   const { inventory } = useInventory();
   const { filteredInventory, filters, setFilters } = useInventoryFilter(inventory);
+  const { hasMintRole } = useUser();
 
   const getStatusBadge = (status: string) => {
     return (
@@ -69,7 +71,9 @@ function InventoryTable() {
             <Filter className="h-4 w-4" />
             {openFilters ? "Masquer les filtres" : "Filtres"}
           </Button>
-          <AddNftDialog />
+          {hasMintRole() && (
+            <AddNftDialog />
+          )}
         </div>
       </CardHeader>
 

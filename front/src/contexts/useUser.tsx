@@ -15,7 +15,7 @@ const UserContext = createContext<any>(null);
  */
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const { address } = useAccount();
-  const { userRoles, hasAnyRole, hasRole, hasAnyOfRoles, hasAllOfRoles } = useCurrentUserRoles();
+  const { userRoles, hasAnyRole, hasRole, hasAnyOfRoles, hasAllOfRoles, hasMintRole } = useCurrentUserRoles();
 
   const exposed = {
     address,
@@ -24,6 +24,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     hasRole,
     hasAnyOfRoles,
     hasAllOfRoles,
+    hasMintRole
   };
 
   return (

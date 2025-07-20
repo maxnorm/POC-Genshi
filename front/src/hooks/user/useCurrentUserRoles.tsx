@@ -66,6 +66,13 @@ function useCurrentUserRoles() {
   const hasAllOfRoles = (roles: (keyof typeof ROLES)[]) =>
     roles.every(role => userRoles[role]);
 
+  const hasMintRole = () => {
+    const hasPieceMinter = hasRole("PIECE_MINTER");
+    const hasAssemblyMinter = hasRole("ASSEMBLY_MINTER");
+    const hasEquipmentMinter = hasRole("EQUIPMENT_MINTER");
+    return hasPieceMinter || hasAssemblyMinter || hasEquipmentMinter; 
+  }
+
   return { 
     isLoadingRoles, 
     userRoles, 
@@ -73,7 +80,8 @@ function useCurrentUserRoles() {
     hasAnyRole, 
     hasRole, 
     hasAnyOfRoles, 
-    hasAllOfRoles 
+    hasAllOfRoles,
+    hasMintRole
   };
 }
 
