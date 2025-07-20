@@ -11,7 +11,6 @@ import { Template } from "@/hooks/useTemplateFilter";
 function TemplatePage() {
   const { templates } = useTemplate();
 
-  // Calculate stats based on template types and status
   const pieceTemplates = templates.filter((t: Template) => t.type === 'Pièce');
   const assemblyTemplates = templates.filter((t: Template) => t.type === 'Assemblage');
   const equipmentTemplates = templates.filter((t: Template) => t.type === 'Équipement');

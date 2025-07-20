@@ -1,6 +1,7 @@
 import Access from "@/components/Access";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { Metadata } from "next";
+import InventoryPage from "@/components/pages/dashboard/inventory/InventoryPage";
 
 export const metadata: Metadata = {
   title: "Inventory – GENSHI",
@@ -17,9 +18,7 @@ function Inventory() {
       'ASSEMBLY_MANAGER', 'ASSEMBLY_MINTER', 'ASSEMBLY_AUDITOR', 'ASSEMBLY_VALIDATOR', 'ASSEMBLY_DOCUMENT_MANAGER',
       'EQUIPMENT_MANAGER', 'EQUIPMENT_MINTER', 'EQUIPMENT_AUDITOR', 'EQUIPMENT_VALIDATOR', 'EQUIPMENT_DOCUMENT_MANAGER',
     ]}>
-      <div className="space-y-6">
-        <PageHeader title="Inventaire" description="Gérez votre inventaire de NFT." />
-      </div>
+      <InventoryPage />
     </Access>
   );
 }

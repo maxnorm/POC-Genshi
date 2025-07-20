@@ -100,3 +100,14 @@ npx hardhat run ./scripts/deploy.ts --network holesky
 <b>PieceNFT</b>:  [0x3CfF0a397d75050f7a34B2EdF32E2053aB504bD5](https://sepolia.etherscan.io/address/0x3CfF0a397d75050f7a34B2EdF32E2053aB504bD5#code)<br>
 <b>AssemblyNFT</b>: [0xf617C0907198A002a596b9bBdfe22CF52eb74d20](https://sepolia.etherscan.io/address/0xf617C0907198A002a596b9bBdfe22CF52eb74d20#code)<br>
 <b>EquipmentNFT</b>: [0x9a68A0f1Bce34ecB00cD4a781D2E26a3Ef31b131](https://sepolia.etherscan.io/address/0x9a68A0f1Bce34ecB00cD4a781D2E26a3Ef31b131#code)<br>
+
+### Frontend
+
+
+
+#### 1. Start Frontend
+```sh
+cd front
+npm install
+npm run dev
+``` 
