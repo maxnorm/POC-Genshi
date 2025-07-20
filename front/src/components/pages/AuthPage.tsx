@@ -31,7 +31,7 @@ function AuthPage() {
       </Link>
       <span className="pt-16 text-md sm:text-lg flex flex-col items-center justify-center">
         <span className="font-semibold">{"Besoin d'aide?"}</span>
-        <a href="mailto:support@genshi.xyz" className="hover:underline">
+        <a href={`mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL}`} className="hover:underline">
           Contactez nous
         </a>
       </span>

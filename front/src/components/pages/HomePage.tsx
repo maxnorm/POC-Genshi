@@ -28,7 +28,7 @@ function HomePage() {
     <h1 className="text-2xl font-bold pb-6">Bienvenue sur GENSHI</h1>
     <div className="flex flex-col items-center justify-center gap-6">
       <p className="text-sm sm:text-md max-w-sm sm:max-w-fit text-center">
-        Plateforme de suivi pour les actifs industriels critiques utilisant la blockchain
+        Passeport numérique sécurisé pour la traçabilité et le suivi de vos équipements critiques
       </p>
       {isConnected ? (
         <Button asChild variant="genshi">
@@ -41,7 +41,7 @@ function HomePage() {
       )}
       <span className="pt-16 text-md sm:text-lg flex flex-col items-center justify-center">
         <span className="font-semibold">Questions sur GENSHI?</span>
-        <a href="mailto:support@genshi.xyz" className="hover:underline">
+        <a href={`mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL}`} className="hover:underline">
           Contactez notre équipe
         </a>
       </span>
