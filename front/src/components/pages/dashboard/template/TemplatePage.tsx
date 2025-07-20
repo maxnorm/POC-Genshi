@@ -6,7 +6,7 @@ import DashboardStats from "@/components/dashboard/DashboardStats";
 import { Package, Layers, Settings, CheckCircle } from "lucide-react";
 import PageWrapper from "@/components/dashboard/PageWrapper";
 import { useTemplate } from "@/contexts/useTemplate";
-import { Template } from "@/hooks/useTemplateFilter";
+import { Template } from "@/hooks/templates/useTemplateFilter";
 
 function TemplatePage() {
   const { templates } = useTemplate();

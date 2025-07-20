@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 import { NFTType } from "@/lib/enums/nftType";
-import { TemplateStatus, FilterOptions } from "@/hooks/useTemplateFilter";
+import { TemplateStatus, FilterOptions } from "@/hooks/templates/useTemplateFilter";
 
 interface TemplateFiltersProps {
   filters: FilterOptions;

@@ -6,7 +6,7 @@ import { useTemplate } from "@/contexts/useTemplate";
 import AddTemplateDialog from "./AddTemplateDialog";
 import Link from "next/link";
 import StatusBadge from "./StatusBadge";
-import useTemplateFilter from "@/hooks/useTemplateFilter";
+import useTemplateFilter from "@/hooks/templates/useTemplateFilter";
 import TemplateFiltersFull   from "./TemplateFiltersFull";
 import TemplateFiltersBadgeOnly from "./TemplateFiltersBadgeOnly";
 import { Filter } from "lucide-react";

@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import {User} from "@/lib/types/User";
 import { Contracts } from "@/lib/enums/contracts";
-import useContractEvent from "./useContractEvent";
+import useContractEvent from "../useContractEvent";
 import { ROLES } from "@/lib/constants/roles";
 
 const roleGrantedEventABI = 'event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender)';

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useAccount } from 'wagmi';
 import { Button } from "@/components/ui/button"
 import Link from "next/link";
-import useRedirectWhenConnected from "@/hooks/useRedirectWhenConnected";
+import useRedirectWhenConnected from "@/hooks/user/useRedirectWhenConnected";
 
 /**
  * Home page

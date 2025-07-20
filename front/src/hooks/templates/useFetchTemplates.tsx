@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Contracts } from "@/lib/enums/contracts";
-import useContractEvent from "./useContractEvent";
+import useContractEvent from "@/hooks/useContractEvent";
 import { parseNFTAddressToType } from "@/lib/enums/nftType";
 
 const templateCreatedEventABI = 'event Template_Created(uint256 indexed templateId, string templateName, address indexed nftContract)';

@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext } from "react";
+import useCurrentUserInventory from "@/hooks/inventory/useCurrentUserInventory";
 
 const InventoryContext = createContext<any>(null);
 
@@ -11,11 +12,10 @@ const InventoryContext = createContext<any>(null);
  * @returns {Object} The InventoryProvider component
  */
 const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
-    const [inventory, setInventory] = useState([]);
+  const { inventoryNFTs: inventory } = useCurrentUserInventory();
 
   const exposed = {
     inventory,
-    setInventory,
   };
 
   return (

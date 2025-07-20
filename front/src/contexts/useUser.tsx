@@ -2,7 +2,7 @@
 
 import { createContext, useContext } from "react";
 import { useAccount } from "wagmi";
-import useCurrentUserRoles from "@/hooks/useCurrentUserRoles";
+import useCurrentUserRoles from "@/hooks/user/useCurrentUserRoles";
 
 
 const UserContext = createContext<any>(null);

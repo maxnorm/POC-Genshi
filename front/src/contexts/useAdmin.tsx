@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useCallback, useState, useRef } from "react";
-import useFetchUsers from "@/hooks/useFetchUsers";
+import useFetchUsers from "@/hooks/user/useFetchUsers";
 import useWrite from "@/hooks/useWriteContract";
 import { accessManagerAddress, accessManagerABI } from "@/lib/constants/contracts/accessManager";
 import { ROLES } from "@/lib/constants/roles";

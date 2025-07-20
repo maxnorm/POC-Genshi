@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import StatusBadge from "./StatusBadge";
 import { parseNFTAddressToType } from "@/lib/enums/nftType";
 import { Button } from "@/components/ui/button";
-import useTemplateStatusChange from "@/hooks/useTemplateStatusChange";
+import useTemplateStatusChange from "@/hooks/templates/useTemplateStatusChange";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 

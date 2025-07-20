@@ -9,34 +9,28 @@ import { Button } from "@/components/ui/button";
 
 import PageWrapper from "@/components/dashboard/PageWrapper";
 import InventoryTable from "../../../dashboard/inventory/InventoryTable";
+import { useInventory } from "@/contexts/useInventory";
 
 function InventoryPage() {
-  const [viewMode, setViewMode] = useState<'table' | 'tree'>('table');
-
+  const { inventory } = useInventory();
   const inventoryStats = [
     {
       title: "Équipements",
-      value: "0",
+      value: inventory.equipment.length,
       change: "équipements actifs",
       icon: Settings,
     },
     {
       title: "Assemblages",
-      value: "0",
+      value: inventory.assemblies.length,
       change: "assemblages composés",
       icon: Layers,
     },
     {
       title: "Pièces",
-      value: "0",
+      value: inventory.pieces.length,
       change: "pièces individuelles",
       icon: Package,
-    },
-    {
-      title: "En Audit",
-      value: "0",
-      change: "éléments en cours d'audit",
-      icon: Shield,
     }
   ];
 
@@ -46,31 +40,8 @@ function InventoryPage() {
         title="Inventaire" 
         description="Gérez et visualisez l'inventaire des équipements, assemblages et pièces" 
       />
-      
       <DashboardStats stats={inventoryStats} />
-      
-      <div className="flex items-center gap-2">
-        <Button
-          variant={viewMode === 'table' ? 'genshi' : 'outline'}
-          size="sm"
-          onClick={() => setViewMode('table')}
-        >
-          <Grid className="w-4 h-4 mr-2" />
-          Tableau
-        </Button>
-        <Button
-          variant={viewMode === 'tree' ? 'genshi' : 'outline'}
-          size="sm"
-          onClick={() => setViewMode('tree')}
-        >
-          <Trees className="w-4 h-4 mr-2" />
-          Arborescence
-        </Button>
-      </div>
-
-      {viewMode === 'table' && (
-        <InventoryTable />
-      )}
+      <InventoryTable />
     </PageWrapper>
   );
 }

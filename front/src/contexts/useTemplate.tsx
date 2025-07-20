@@ -1,11 +1,11 @@
 "use client";
 
 import { createContext, useContext, useEffect, useCallback, useState, useRef } from "react";
-import useFetchTemplates from "@/hooks/useFetchTemplates";
+import useFetchTemplates from "@/hooks/templates/useFetchTemplates";
 import useWrite from "@/hooks/useWriteContract";
 import { templateRegistryAddress, templateRegistryABI } from "@/lib/constants/contracts/templateRegistry";
 import { publicClient } from "@/lib/client";
-import useCurrentTemplate from "@/hooks/useCurrentTemplate";
+import useCurrentTemplate from "@/hooks/templates/useCurrentTemplate";
 import { AttributeDefinition } from "@/lib/types/Attribute";
 import { DocumentDefinition } from "@/lib/types/Document";
 import { TemplateView } from "@/lib/types/Template";
