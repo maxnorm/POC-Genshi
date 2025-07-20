@@ -29,13 +29,12 @@ import InventoryFiltersBadgeOnly from "@/components/dashboard/inventory/Inventor
 import useInventoryFilter from "@/hooks/inventory/useInventoryFilter";
 import { useInventory } from "@/contexts/useInventory";
 import { NFTItem } from "@/lib/types/NFTItem";
-
-
+import AddNftDialog from "@/components/dashboard/inventory/AddNftDialog";
 
 function InventoryTable() {
   const [openFilters, setOpenFilters] = useState(false);
   const { inventory } = useInventory();
-  const { filteredInventory, filters, setFilters } = useInventoryFilter(inventory.all);
+  const { filteredInventory, filters, setFilters } = useInventoryFilter(inventory);
 
   const getStatusBadge = (status: string) => {
     return (
@@ -70,15 +69,7 @@ function InventoryTable() {
             <Filter className="h-4 w-4" />
             {openFilters ? "Masquer les filtres" : "Filtres"}
           </Button>
-          <Button variant={"genshiSimple"} size={"sm"} 
-            className={cn("px-12 hover:text-genshi-blue-secondary")}
-            onClick={() => {
-              setOpenFilters(!openFilters);
-            }}
-          >
-            <Plus className="h-4 w-4" />
-            Créer un nouveau NFT
-          </Button> 
+          <AddNftDialog />
         </div>
       </CardHeader>
 

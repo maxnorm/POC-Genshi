@@ -12,7 +12,6 @@ const templateDeactivatedEventABI = 'event Template_Deactivated(uint256 indexed 
  * @returns {Object} The templates and the loading state
  */
 function useFetchTemplates() {
-  
   const [templates, setTemplates] = useState<any[]>([]);
   const [isLoadingTemplates, setIsLoadingTemplates] = useState(true);
 
