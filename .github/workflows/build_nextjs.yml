@@ -2,9 +2,12 @@ name: NextJS Build Test
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, dev ]
   pull_request:
-    branches: [ main ]
+    paths-ignore:
+      - "backend/**"
+      - "docs/**"
+      - "**.md"
 
 jobs:
   build:
