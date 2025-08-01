@@ -4,6 +4,8 @@ import { ethers } from "hardhat";
 describe("ERC998TopDown contract", function () {
   let erc998: any;
   let erc998_address: any;
+  let erc998_2: any;
+  let erc998_2_address: any;
   let erc721_1: any;
   let erc721_1_address: any;
   let erc721_2: any;
@@ -43,6 +45,13 @@ describe("ERC998TopDown contract", function () {
     return receipt.logs[0].args[2];
   }
 
+  async function mintERC998Token_2(to: any) {
+    const tx = await erc998_2.mint(to);
+    const receipt = await tx.wait();
+    // Transfer event: [from, to, tokenId] (ERC721 Event)
+    return receipt.logs[0].args[2];
+  }
+
   async function mintERC721Token_1(to: any) {
     const tx = await erc721_1.mint(to);
     const receipt = await tx.wait();
@@ -70,6 +79,21 @@ describe("ERC998TopDown contract", function () {
     const ERC998TokenId_2 = await mintERC998Token(alice.address);
     return { ERC998TokenId, ERC721TokenId_1, ERC721TokenId_2, ERC998TokenId_2 };
   }
+
+  async function mint2ERC998Tokens() {
+    const ERC998TokenId_1_1 = await mintERC998Token(owner.address);
+    const ERC998TokenId_1_2 = await mintERC998Token(owner.address);
+    return { ERC998TokenId_1_1, ERC998TokenId_1_2 };
+  }
+
+  async function mintERC998TokenFromDifferentContract() {
+    const ERC998TokenId_1_1 = await mintERC998Token(owner.address);
+    const ERC998TokenId_1_2 = await mintERC998Token(owner.address);
+    const ERC998TokenId_2_1 = await mintERC998Token_2(owner.address);
+    const ERC998TokenId_2_2 = await mintERC998Token_2(owner.address);
+    return { ERC998TokenId_1_1, ERC998TokenId_1_2, ERC998TokenId_2_1, ERC998TokenId_2_2 };
+  }
+
 
   describe("Deployement", function () {
     it("Should deploy the SampleERC998 contract", async function () {
@@ -468,7 +492,7 @@ describe("ERC998TopDown contract", function () {
         expect(await erc998.childContractByIndex(ERC998TokenId, 0)).to.equal(erc721_1_address);
         expect(await erc998.childTokenByIndex(ERC998TokenId, erc721_1_address, 0)).to.equal(ERC721TokenId_1);
       });
-      it("should fail for invalid contract index", async function () {
+      it("should revert for invalid contract index", async function () {
         const { ERC998TokenId, ERC721TokenId_1 } = await mint2SetsOfTokens();
         const data = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [ERC998TokenId]);
         await erc721_1.connect(alice)["safeTransferFrom(address,address,uint256,bytes)"](
@@ -521,14 +545,109 @@ describe("ERC998TopDown contract", function () {
       rootOwner = bytes32ToAddress(rootOwnerBytes);
       expect(rootOwner).to.equal(alice.address);
     });
-    it("should handle nested ownership", async function () {
-    });
   });
 
   describe("Complex Scenarios", function () {
-    it("should handle nested composable transfers");
-    it("should handle multiple child transfers in single transaction");
-    it("should maintain correct state after multiple operations");
-    it("should fail when circular ownership");
+    describe("Circularity & Depth", function () {
+      it("should revert to create direct circularity (A -> A)", async function () {
+        const { ERC998TokenId } = await mintFixture();
+
+        const data = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [ERC998TokenId]);
+        await expect(
+          erc998.connect(owner)["safeTransferFrom(address,address,uint256,bytes)"](
+            owner.address,
+            erc998_address,
+            ERC998TokenId,
+            data
+          )
+        ).to.be.revertedWithCustomError(erc998, "ERC998TopDown_CircularOwnership")
+      });
+
+      it("should revert to create indirect circularity (A -> B -> A)", async function () {
+        const { ERC998TokenId_1_1, ERC998TokenId_1_2 } = await mint2ERC998Tokens();
+
+        const data = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [ERC998TokenId_1_1]);
+        await erc998.connect(owner)["safeTransferFrom(address,address,uint256,bytes)"](
+          owner.address,
+          erc998_address,
+          ERC998TokenId_1_2 ,
+          data
+        );
+
+        const data2 = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [ERC998TokenId_1_2]);
+        await expect(
+        erc998.connect(owner)["safeTransferFrom(address,address,uint256,bytes)"](
+          owner.address,
+          erc998_address,
+          ERC998TokenId_1_1,
+          data2
+        )).to.be.revertedWithCustomError(erc998, "ERC998TopDown_CircularOwnership")
+      });
+
+      it("should create deep nested composables up to MAX_DEPTH", async function () {
+        this.timeout(1000000000);
+
+        const MAX_DEPTH = Number(await erc998.MAX_DEPTH());
+
+        let parentTokenId = await mintERC998Token(owner.address);
+
+        // Create MAX_DEPTH - 1 nested composables since we already have one
+        for (let i = 0; i < MAX_DEPTH - 1; i++) {
+          const childTokenId = await mintERC998Token(owner.address);
+          const data = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [parentTokenId]);
+          await erc998.connect(owner)["safeTransferFrom(address,address,uint256,bytes)"](
+            owner.address,
+            erc998_address,
+            childTokenId,
+            data
+          );
+          parentTokenId = childTokenId;
+        }
+      });
+
+      it("should revert to create deep nested composables beyond MAX_DEPTH", async function () {
+        this.timeout(1000000000);
+
+        const MAX_DEPTH = Number(await erc998.MAX_DEPTH());
+
+        let parentTokenId = await mintERC998Token(owner.address);
+
+        for (let i = 0; i < MAX_DEPTH - 1; i++) {
+          const childTokenId = await mintERC998Token(owner.address);
+          const data = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [parentTokenId]);
+          await erc998.connect(owner)["safeTransferFrom(address,address,uint256,bytes)"](
+            owner.address,
+            erc998_address,
+            childTokenId,
+            data
+          );
+          parentTokenId = childTokenId;
+        }
+
+        // Create the MAX_DEPTHth token
+        const childTokenId = await mintERC998Token(owner.address);
+        const data = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [parentTokenId]);
+        await expect(
+          erc998.connect(owner)["safeTransferFrom(address,address,uint256,bytes)"](
+            owner.address,
+            erc998_address,
+            childTokenId,
+            data
+          )
+        ).to.be.revertedWithCustomError(erc998, "ERC998TopDown_TooDeepComposable");
+      })
+    });
+
+    describe("Cross-Contract Composability", function () {
+      it("should revert when creating a cross-contract circular composable")
+      it("should revert to create deep nested cross-contract composables beyond MAX_DEPTH")
+    });
+
+    describe("Gas Usage", function () {
+      it("Gas for adding a child")
+    });
+  });
+
+  describe("ERC20 Support", function () {
   });
 });
