@@ -404,56 +404,57 @@ abstract contract ERC998TopDown is
   /// @dev This function is used to check for circular ownership and too deep composable
   /// @dev It's a O(n) operation where n is the depth of the composable.
   function _checkForInheritanceLoop(
-    uint256 childTokenId,
-    address childContract,
-    uint256 parentTokenId,
-    address parentContract
+    uint256  childTokenId,
+    address  childContract,
+    uint256  parentTokenId,
+    address  parentContract
   ) internal view {
+
     address currentContract = parentContract;
-    uint256 currentTokenId = parentTokenId;
+    uint256 currentTokenId  = parentTokenId;
 
     for (uint16 depth = 0; depth < MAX_DEPTH; depth++) {
-        if (currentContract == address(0) || currentTokenId == 0) {
-            return;
-        }
-        
-        if (currentContract == childContract && currentTokenId == childTokenId) {
-            revert ERC998TopDown_CircularOwnership();
-        }
 
-        if (currentContract == address(this)) {
-            currentTokenId = _childTokenOwner[currentContract][currentTokenId];
-            continue;
+      // Direct circularity (same contract & tokenId)
+      if (currentContract == childContract && currentTokenId == childTokenId) {
+        revert ERC998TopDown_CircularOwnership();
+      }
+
+      // Find who owns (currentContract , currentTokenId)
+      address ownerAddr = IERC721(currentContract).ownerOf(currentTokenId);
+
+      // Reached an EOA – this is the root
+      if (ownerAddr.code.length == 0) {
+        if (depth >= MAX_DEPTH - 1) {
+          revert ERC998TopDown_TooDeepComposable(parentTokenId, childTokenId, MAX_DEPTH);
         }
+        return;
+      }
 
-        // Call ownerOfChild on the current parent contract
-        // Assembly is used here for efficient looping
-        bytes memory callData = abi.encodeWithSelector(
-            IERC998ERC721TopDown.ownerOfChild.selector,
-            address(this),
-            currentTokenId
-        );
-        bool callSuccess;
-        bytes32 parentOwner;
-        uint256 nextTokenId;
+      // Try to climb one level up through ERC-998
+      (bool ok, bytes memory ret) = ownerAddr.staticcall(
+        abi.encodeWithSelector(
+          IERC998ERC721TopDown.ownerOfChild.selector,
+          currentContract,
+          currentTokenId
+        )
+      );
 
-        assembly {
-            let output := mload(0x40)
-            let result := staticcall(
-              gas(), 
-              currentContract, 
-              add(callData, 0x20),
-              mload(callData), 
-              output, 
-              0x40
-            )
-            callSuccess := result
-            if result {
-                parentOwner := mload(output)
-                nextTokenId := mload(add(output, 0x20))
-            }
-        }    
+      // ownerAddr is not a composable → root reached
+      if (!ok || ret.length < 64) {
+        if (depth >= MAX_DEPTH - 1) {
+          revert ERC998TopDown_TooDeepComposable(parentTokenId, childTokenId, MAX_DEPTH);
+        }
+        return;
+      }
+
+      uint256 nextTokenId;
+      assembly { nextTokenId := mload(add(ret, 0x40)) }
+
+      currentContract = ownerAddr;
+      currentTokenId  = nextTokenId;
     }
+
     revert ERC998TopDown_TooDeepComposable(parentTokenId, childTokenId, MAX_DEPTH);
   }
 

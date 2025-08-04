@@ -25,6 +25,9 @@ describe("ERC998TopDown contract", function () {
     erc998 = await ethers.deployContract("SampleERC998");
     await erc998.waitForDeployment();
     erc998_address = await erc998.getAddress();
+    erc998_2 = await ethers.deployContract("SampleERC998");
+    await erc998_2.waitForDeployment();
+    erc998_2_address = await erc998_2.getAddress();
     erc721_1 = await ethers.deployContract("SampleERC721");
     await erc721_1.waitForDeployment();
     erc721_1_address = await erc721_1.getAddress();
@@ -88,10 +91,8 @@ describe("ERC998TopDown contract", function () {
 
   async function mintERC998TokenFromDifferentContract() {
     const ERC998TokenId_1_1 = await mintERC998Token(owner.address);
-    const ERC998TokenId_1_2 = await mintERC998Token(owner.address);
     const ERC998TokenId_2_1 = await mintERC998Token_2(owner.address);
-    const ERC998TokenId_2_2 = await mintERC998Token_2(owner.address);
-    return { ERC998TokenId_1_1, ERC998TokenId_1_2, ERC998TokenId_2_1, ERC998TokenId_2_2 };
+    return { ERC998TokenId_1_1, ERC998TokenId_2_1 };
   }
 
 
@@ -639,8 +640,122 @@ describe("ERC998TopDown contract", function () {
     });
 
     describe("Cross-Contract Composability", function () {
-      it("should revert when creating a cross-contract circular composable")
-      it("should revert to create deep nested cross-contract composables beyond MAX_DEPTH")
+      it("should revert when creating a cross-contract circular composable", async function () {
+        const { ERC998TokenId_1_1, ERC998TokenId_2_1 } = await mintERC998TokenFromDifferentContract();
+
+        const data1 = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [ERC998TokenId_2_1]);
+        await erc998.connect(owner)["safeTransferFrom(address,address,uint256,bytes)"](
+          owner.address,
+          erc998_2_address,
+          ERC998TokenId_1_1,
+          data1
+        );
+
+        const data2 = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [ERC998TokenId_1_1]);
+        await expect(
+          erc998_2.connect(owner)["safeTransferFrom(address,address,uint256,bytes)"](
+            owner.address,
+            erc998_address,
+            ERC998TokenId_2_1,
+            data2
+          )
+        ).to.be.revertedWithCustomError(erc998_2, "ERC998TopDown_CircularOwnership");
+      });
+
+      it("should build a deep cross-contract hierarchy up to MAX_DEPTH", async function () {
+        this.timeout(1_000_000_000);
+
+        const MAX_DEPTH = Number(await erc998.MAX_DEPTH());
+
+        // root = token minted in erc998 (contract A)
+        let parentTokenId     = await mintERC998Token(owner.address);
+        let parentContract    = erc998;              // contract that owns the parent
+        let childContract     = erc998_2;            // contract that will mint next child
+
+        for (let depth = 1; depth < MAX_DEPTH; depth++) {
+          // mint child in childContract
+          const childTokenId =
+            childContract === erc998 ? await mintERC998Token(owner.address)
+                                     : await mintERC998Token_2(owner.address);
+
+          const data = ethers.AbiCoder.defaultAbiCoder().encode(
+            ['uint256'],
+            [parentTokenId]            // parent lives in parentContract
+          );
+
+          await childContract
+            .connect(owner)
+            ["safeTransferFrom(address,address,uint256,bytes)"](
+              owner.address,
+              await parentContract.getAddress(),     // send TO the parentContract
+              childTokenId,
+              data
+            );
+
+          // advance one level
+          parentTokenId  = childTokenId;
+          [parentContract, childContract] = [childContract, parentContract];
+        }
+        // success ⇒ depth == MAX_DEPTH
+      });
+
+      it("should revert when the cross-contract hierarchy exceeds MAX_DEPTH", async function () {
+        this.timeout(1_000_000_000);
+
+        const MAX_DEPTH = Number(await erc998.MAX_DEPTH());
+
+        let parentTokenId  = await mintERC998Token(owner.address);
+        let parentContract = erc998;
+        let childContract  = erc998_2;
+
+        // build exactly MAX_DEPTH levels (same loop as above)
+        for (let depth = 1; depth < MAX_DEPTH; depth++) {
+          const childTokenId =
+            childContract === erc998 ? await mintERC998Token(owner.address)
+                                     : await mintERC998Token_2(owner.address);
+
+          const data = ethers.AbiCoder.defaultAbiCoder().encode(
+            ['uint256'],
+            [parentTokenId]
+          );
+
+          await childContract
+            .connect(owner)
+            ["safeTransferFrom(address,address,uint256,bytes)"](
+              owner.address,
+              await parentContract.getAddress(),
+              childTokenId,
+              data
+            );
+
+          parentTokenId = childTokenId;
+          [parentContract, childContract] = [childContract, parentContract];
+        }
+
+        // now try to add one more level (depth == MAX_DEPTH + 1)
+        const extraChildId =
+          childContract === erc998 ? await mintERC998Token(owner.address)
+                                   : await mintERC998Token_2(owner.address);
+
+        const data = ethers.AbiCoder.defaultAbiCoder().encode(
+          ['uint256'],
+          [parentTokenId]
+        );
+
+        await expect(
+          childContract
+            .connect(owner)
+            ["safeTransferFrom(address,address,uint256,bytes)"](
+              owner.address,
+              await parentContract.getAddress(),
+              extraChildId,
+              data
+            )
+        ).to.be.revertedWithCustomError(
+          childContract,
+          "ERC998TopDown_TooDeepComposable"
+        );
+      });
     });
 
     describe("Gas Usage", function () {
