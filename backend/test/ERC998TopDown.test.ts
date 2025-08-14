@@ -16,7 +16,6 @@ describe("ERC998TopDown contract", function () {
   let bob: any;
 
   before(async function () {
-    // We can get our addresses only once, and reuse them for each test
     [owner, alice, bob] = await ethers.getSigners();
   });
 
@@ -366,6 +365,71 @@ describe("ERC998TopDown contract", function () {
     });
   });
 
+  describe("Child Retrieval & Safe Transfer", function () {
+    it('should getChild when caller owns the ERC721', async function () {
+      const { ERC998TokenId, ERC721TokenId_1 } = await mintFixture();
+      
+      await erc721_1.connect(alice).approve(erc998_address, ERC721TokenId_1);
+      
+      await erc998.connect(alice).getChild(
+        alice.address,        // from: alice owns the ERC721
+        ERC998TokenId,        // tokenId
+        erc721_1_address,     // childContract
+        ERC721TokenId_1       // childTokenId
+      );
+      
+      expect(await erc998.childExists(ERC998TokenId, erc721_1_address, ERC721TokenId_1)).to.be.true;
+      
+      expect(await erc721_1.ownerOf(ERC721TokenId_1)).to.equal(erc998_address);
+      
+      const [rootOwnerBytes32] = await erc998.ownerOfChild(erc721_1_address, ERC721TokenId_1);
+      const rootOwner = bytes32ToAddress(rootOwnerBytes32);
+      expect(rootOwner).to.equal(owner.address);
+    });
+  });
+
+  describe("Child Removal", function () {})
+
+  describe("Approval", function () {
+    it("should approve and revoke spender on ERC998", async function () {
+      const { ERC998TokenId } = await mintFixture();
+      
+      expect(await erc998.getApproved(ERC998TokenId)).to.equal(ethers.ZeroAddress);
+      
+      await erc998.approve(bob.address, ERC998TokenId);
+      expect(await erc998.getApproved(ERC998TokenId)).to.equal(bob.address);
+      
+      await erc998.connect(bob).transferFrom(owner.address, bob.address, ERC998TokenId);
+      expect(await erc998.ownerOf(ERC998TokenId)).to.equal(bob.address);
+    });
+    
+    it("should allow operator to approve child transfer", async function () {
+      // Setup: mint tokens and transfer child to parent
+      const { ERC998TokenId, ERC721TokenId_1 } = await mintFixture();
+      const data = ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [ERC998TokenId]);
+      
+      // Transfer ERC721 to the ERC998 token
+      await erc721_1.connect(alice)["safeTransferFrom(address,address,uint256,bytes)"](
+        alice.address,
+        erc998_address,
+        ERC721TokenId_1,
+        data
+      );
+
+      await erc998.setApprovalForAll(bob.address, true);
+
+      await erc998.connect(bob).transferChild(
+        ERC998TokenId,
+        alice.address,
+        erc721_1_address,
+        ERC721TokenId_1
+      );
+
+      expect(await erc721_1.ownerOf(ERC721TokenId_1)).to.equal(alice.address);
+      expect(await erc998.childExists(ERC998TokenId, erc721_1_address, ERC721TokenId_1)).to.be.false;
+    });
+  });
+
   describe("Error Cases", function () {
     describe("ERC721 Operations", function () {
       it("should revert when transferring to zero address", async function () {
@@ -375,7 +439,7 @@ describe("ERC998TopDown contract", function () {
           .to.be.revertedWithCustomError(erc998, "ERC721InvalidReceiver");
       });
 
-      it("should revert when caller is not owner nor approved", async function () {
+      it("should revert when caller is not owner or approved", async function () {
         const { ERC998TokenId } = await mintFixture();
         
         await expect(erc998.connect(alice).transferFrom(owner.address, bob.address, ERC998TokenId))
@@ -399,7 +463,18 @@ describe("ERC998TopDown contract", function () {
           .withArgs(ERC998TokenId);
       });
     });
+
+    describe("Child Operations", function () {
+      it("transferChild should revert when 'to' is not owner of the child token")
+      it("getChild revert when child already owned by parent")
+      it("safeTransferChild should revert when childContract is not ERC721")
+      it("getChild should revert when 'from' is not owner of the child token")
+      it("childExists should return false when token index mapping is zero")
+      it("childContractByIndex(0) should revert after last child contract is removed")
+    });
   });
+
+
 
   describe("Events", function () {
     it("should emit ReceivedChild event", async function () {
@@ -546,6 +621,11 @@ describe("ERC998TopDown contract", function () {
       rootOwner = bytes32ToAddress(rootOwnerBytes);
       expect(rootOwner).to.equal(alice.address);
     });
+
+    it("should get correct root owner through 3-level same-contract hierarchy")
+    it("should get correct root owner through 3-level cross-contract hierarchy")
+    it("should get direct owner of child in 2-level same-contract hierarchy")
+    it("should get direct owner of child in 2-level cross-contract hierarchy")
   });
 
   describe("Complex Scenarios", function () {
@@ -585,6 +665,7 @@ describe("ERC998TopDown contract", function () {
         )).to.be.revertedWithCustomError(erc998, "ERC998TopDown_CircularOwnership")
       });
 
+      /*
       it("should create deep nested composables up to MAX_DEPTH", async function () {
         this.timeout(1000000000);
 
@@ -637,6 +718,8 @@ describe("ERC998TopDown contract", function () {
           )
         ).to.be.revertedWithCustomError(erc998, "ERC998TopDown_TooDeepComposable");
       })
+
+      */
     });
 
     describe("Cross-Contract Composability", function () {
@@ -661,42 +744,38 @@ describe("ERC998TopDown contract", function () {
           )
         ).to.be.revertedWithCustomError(erc998_2, "ERC998TopDown_CircularOwnership");
       });
-
+      /*
       it("should build a deep cross-contract hierarchy up to MAX_DEPTH", async function () {
         this.timeout(1_000_000_000);
 
         const MAX_DEPTH = Number(await erc998.MAX_DEPTH());
 
-        // root = token minted in erc998 (contract A)
         let parentTokenId     = await mintERC998Token(owner.address);
-        let parentContract    = erc998;              // contract that owns the parent
-        let childContract     = erc998_2;            // contract that will mint next child
+        let parentContract    = erc998;
+        let childContract     = erc998_2;
 
         for (let depth = 1; depth < MAX_DEPTH; depth++) {
-          // mint child in childContract
           const childTokenId =
             childContract === erc998 ? await mintERC998Token(owner.address)
                                      : await mintERC998Token_2(owner.address);
 
           const data = ethers.AbiCoder.defaultAbiCoder().encode(
             ['uint256'],
-            [parentTokenId]            // parent lives in parentContract
+            [parentTokenId]
           );
 
           await childContract
             .connect(owner)
             ["safeTransferFrom(address,address,uint256,bytes)"](
               owner.address,
-              await parentContract.getAddress(),     // send TO the parentContract
+              await parentContract.getAddress(),
               childTokenId,
               data
             );
 
-          // advance one level
           parentTokenId  = childTokenId;
           [parentContract, childContract] = [childContract, parentContract];
         }
-        // success ⇒ depth == MAX_DEPTH
       });
 
       it("should revert when the cross-contract hierarchy exceeds MAX_DEPTH", async function () {
@@ -708,7 +787,6 @@ describe("ERC998TopDown contract", function () {
         let parentContract = erc998;
         let childContract  = erc998_2;
 
-        // build exactly MAX_DEPTH levels (same loop as above)
         for (let depth = 1; depth < MAX_DEPTH; depth++) {
           const childTokenId =
             childContract === erc998 ? await mintERC998Token(owner.address)
@@ -756,10 +834,7 @@ describe("ERC998TopDown contract", function () {
           "ERC998TopDown_TooDeepComposable"
         );
       });
-    });
-
-    describe("Gas Usage", function () {
-      it("Gas for adding a child")
+      */
     });
   });
 

@@ -112,6 +112,7 @@ abstract contract ERC998TopDown is
     require(to != rootOwner, ERC998TopDown_ApprovalToCurrentOwner(tokenId));
         
     _rootOwnerTokenApprovals[rootOwner][tokenId] = to;
+    super.approve(to, tokenId);
     emit Approval(rootOwner, to, tokenId);
   }
 
