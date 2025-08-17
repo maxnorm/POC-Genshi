@@ -2,9 +2,12 @@ name: Build & Test Smart Contracts
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
   pull_request:
-    branches: [main]
+    paths-ignore:
+      - 'frontend/**'
+      - '**.md'
+      - 'docs/**'
 
 jobs:
   backend-tests:
